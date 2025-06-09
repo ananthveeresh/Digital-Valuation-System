@@ -1,0 +1,246 @@
+<main id="main" class="main">
+    <section class="section dashboard">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="col-md-10">
+                    <h5 class="card-title">Select Exam Id</h5>
+                  </div>
+                  <!-- <div class="col-md-2 text-end">
+                    <button class="btn btn-primary btn-sm" (click)="CreateExam()">Create</button>
+                  </div> -->
+                </div>
+                <div class="form-groupas">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>S.No</th>
+                          <th>Date</th>
+                          <th>Exam Id</th>
+                          <th>Exam Name</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let x of UniqueDataExamId;let i = index">
+                          <td>{{i + 1}}</td>
+                          <td>{{x.examDate | date : 'dd/MM/yyyy'}}</td>
+                          <td  class="badge rounded-pill" style="cursor: pointer; padding: 6px 6px;margin: 6px; background-color: #007bff; color: white; border: none; font-size: 14px; transition: all 0.3s ease;"(click)="GetExamData(x.examId)">
+                              {{x.examId}}
+                            </td>
+                          <td>{{x.examName}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+        <div class="col-md-12" *ngIf="GetExamInfoById.length > 0 || UpdateCheckBox.length > 0">
+          <div class="row">
+            <div class="card">
+              <div class="card-body" *ngIf="FilteredCamp.length>0">
+                <ul class="nav nav-tabs nav-tabs-bordered d-flex justify-content-end my-1 gap-1" id="borderedTab" role="tablist">
+                  <li class="nav-item" role="presentation" *ngFor="let x of Campus">
+                    <button class="nav-link" [class.active1]="x.campus_name" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home" 
+                      type="button" role="tab" aria-controls="home" aria-selected="x.campus_name" (click)="selectBranch(x.campus_name)">
+                      {{ x.campus_name }}
+                    </button>
+                  </li>
+                </ul>
+                <h5 class="card-title" *ngIf="ShowFacUpdate == 0 && FilteredCamp.length> 0">Subject List</h5>
+                <div class="d-flex justify-content-between align-items-center" *ngIf="ShowFacUpdate == 2 && UpdateCheckBox.length > 0">
+                  <div class="col-md-10">
+                    <h5 class="card-title">Update Faculty</h5>
+                  </div>
+                  <div class="col-md-2 text-end">
+                    <button class="btn btn-primary btn-sm" (click)="BackToList()">List</button>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center" *ngIf="ShowFacUpdate == 3 && editFacDetails.length > 0">
+                  <div class="col-md-10">
+                    <h5 class="card-title">Update Papercode</h5>
+                  </div>
+                  <div class="col-md-2 text-end">
+                    <button class="btn btn-primary btn-sm" (click)="BackToList()">List</button>
+                  </div>
+                </div>
+                <!-- Update papercode -->
+                <div class="table-responsive" *ngIf="ShowFacUpdate == 3 && editFacDetails.length > 0">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>Campus</th>
+                        <th>Semister</th>
+                        <th>Subject</th>
+                        <th>PaperCode</th>
+                      
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of editFacDetails; let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{x.campus}}</td>
+                        <td><input class="form-control" type="text" value="Sem -{{x.semister}}" readonly></td>
+                        <td> <input type="text" value="{{x.subjectName}}" class="form-control" readonly></td>
+                        <td style="text-align: left;"><input type="text" value="{{x.papercode}}" class="form-control" [(ngModel)]="x.papercode"></td>
+                      </tr>
+                    </tbody>
+                    </table>
+                    <div class="col-md-12 text-center" >
+                      <button type="button" class="btn btn-primary" (click)="UpdatePapercode()">Update</button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover" *ngIf="FilteredCamp.length >0 && ShowFacUpdate == 0">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>Campus</th>
+                        <th>Semister</th>
+                        <th>Subject</th>
+                        <th>Subject Code</th>
+                        <th>Paper Code</th>
+                        <!-- <th>Edit</th> -->
+                        <th>View Faculty</th>
+                        <th>Map Faculty</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of FilteredCamp; let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{x.campus}}</td>
+                        <td>Sem -{{x.semister}}</td>
+                        <td>{{x.subjectName}}</td>
+                        <td class="text-start">{{x.subjectcode}}</td>
+                        <td class="text-start">{{x.papercode}}</td>
+                        <!-- <td (click)="EditFac(x)">
+                          <span class="text-danger"><i class="bi bi-pencil-square"></i></span>
+                        </td> -->
+                        <td (click)="ViewFac(x.staffdetails)">
+                          <span class="text-success" data-bs-toggle="modal" data-bs-target="#verticalycentered"><i class="bi bi-eye"></i></span>
+                        </td>
+                        <td (click)="UpdateFac(x.staffdetails,x.examId,x.papercode,x.subjectName,x.campus)">
+                         <span class="text-primary"><i class="bi bi-pencil-square"></i></span>
+                       </td>
+                      </tr>
+                    </tbody>
+                    </table>
+                </div>
+
+                <!-- Faculty Mapping -->
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover table-bordered align-middle text-center" *ngIf="ShowFacUpdate == 2 && UpdateCheckBox.length !== 0">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>Branch</th>
+                        <th>Paycode</th>
+                        <th>Faculty Name</th>
+                        <th>Subject</th>
+                        <th>Mobile</th>
+                        <th>Allocated Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of UpdateCheckBox; let i = index" style="font-size: 12px; white-space: nowrap;">
+                        <th>{{i + 1}}</th>
+                        <td>{{x.branch}}</td>
+                        <td>
+                          <span class="badge bg-warning text-dark">{{x.paycode}}</span>
+                        </td>
+                        <td>{{x?.facultyName}}</td>
+                        <td>
+                          <span *ngFor="let subject of x.subject">
+                            {{subject}}<br/>
+                          </span>
+                        </td>
+                        <td>{{x.mobile}}</td>
+                        <td>
+                          <input type="checkbox" class="form-check-input" [checked]="x.checked_status" (click)="Changing_Alccated_Status(x,x.checked_status)">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="alert alert-danger mt-2" role="alert" *ngIf="ShowFacUpdate == 2 &&UpdateCheckBox.length == 0">
+                  No Faculities Found For This Campus
+                </div>
+                   <div class="text-center" *ngIf="ShowFacUpdate == 2 && UpdateCheckBox.length !== 0">
+                     <button class="btn btn-primary" (click)="SubmitUpdatedAlocation()">Update</button>
+                   </div>
+              </div> 
+
+              <div class="card-body" *ngIf="FilteredCamp.length==0">
+                <h5 class="text-center text-danger mt-3">*** No Data Found ***</h5>
+              </div>
+            </div>
+          </div>
+        
+         
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="modal fade" id="verticalycentered" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+       <div class="modal-header bg-light border-bottom-0">
+         <h5 class="modal-title d-flex align-items-center">
+         </h5>
+           <span class="me-2"><b>Allocated Faculty</b></span>
+           <div>
+             <span class="as">{{staffdetails[0]?.branch}}</span>
+             <!-- <span class="small text-muted ms-2">- </span> -->
+           </div>
+          
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+        <div class="modal-body" *ngIf="staffdetails.length > 0">
+           <div class="row mt-2" >
+               <div class="col-md-12" style="max-width:100%; max-height:100%;">
+                <div class="table-responsive">
+                  <table class="table  table-bordered">
+                    <thead class="bg-light">
+                      <tr style="font-size: 12px;">
+                        <th>Branch</th>
+                        <th>Paycode</th>
+                        <th>Faculty Name</th>
+                        <th>Subject</th>
+                        <th>Mobile</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of staffdetails" style="font-size: 12px; white-space: nowrap;">
+           
+                          <td>{{x.branch}}</td>
+                          <td>{{x.paycode}}</td>
+                          <td> {{x?.facultyName}}</td>
+                          <td>{{x.subject}}</td>
+                          <td>{{x.mobile}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+               
+               </div>
+              
+             </div>
+            
+        </div>
+        <div *ngIf="staffdetails.length == 0">
+         <div class="text-center text-danger mb-3">No Faculty Available</div>
+     </div>
+      </div>
+    </div>
+  </div>

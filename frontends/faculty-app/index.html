@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="correctionApp">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paper Valuation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+    <script src="excellentexport.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ExcellentExport/3.5.0/excellentexport.min.js"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+
+    <script src="homectrl.js"></script>
+    <!-- <script src="pdfAnnotationDirective.js"></script>  -->
+    <script>
+        $(document).ready(function () {
+            $("#sidebarCollapse").on("click", function () {
+                $("#sidebar").toggleClass("active");
+                $("#content").toggleClass("active");
+            });
+        });
+    </script>
+    <style>
+        body,
+        button {
+            font-size: 13px !important;
+
+        }
+
+        .scale-up {
+            transform: scale(0.5);
+            opacity: 0;
+            animation: scaleUp 1s forwards;
+        }
+
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .btn-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            padding: -0.5rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            height: 35px;
+        }
+
+        .btn-custom i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-custom:hover,
+        .btn-custom:focus {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-custom:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.25rem rgba(38, 143, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body ng-controller="homectrl">
+    <div class="container-fluid col-xl-8">
+        <div class="row align-items-center justify-content-between scale-up">
+            <div class="col-md-3 col-lg-3  text-center ">
+                <img src="./DIGIVAL_LOGO1.png" class="my-2 " style="width: 100%;" alt="Logo" />
+            </div>
+            <div class="col-md-4 col-lg-4 " style="margin-top: 8px;">
+              <div class="card p-3  shadow-sm ">
+                 <div class="mb-0 fw-semi-bold ">
+                    <span class="text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-person-circle" viewBox="0 0 16 16">
+                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                         <path fill-rule="evenodd"
+                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                        </svg>
+                     </span>
+                        {{empuniquecode.facultyName}}
+                    </div>
+                    <div class="d-flex flex-row gap-2 align-items-center   mt-2 ">
+                        <span>
+                            <svg class="text-primary" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+                                <path
+                                    d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                            </svg>
+                        </span>
+                        <span class="text-muted">
+                            {{empuniquecode.mobile}}
+                        </span>
+                    </div>
+                    <div class="d-flex flex-row gap-2 align-items-center   mt-2">
+                      <span class="text-muted" style="max-width: 95%;">
+                          <button type="button" class="btn btn-outline-primary" ng-click="logOut()">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                                <path fill-rule="evenodd"
+                                 d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                              </svg>
+                                Logout
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="m-0">
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <td style="width: 50px;text-align: center;">S.No</td>
+                                <td> Exam Code</td>
+                                <td> Paper Code</td>
+                                <td>Subject Name</td>
+                                <td>Alloted </td>
+                                <td> Completed</td>
+                                <td>Pending</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="staff_alloted_paper.length == 0">
+                                <td colspan="7" class="text-danger text-center" style="font-size: 18px;"> no data found
+                                </td>
+                            </tr>
+                            <tr ng-if="staff_alloted_paper.length > 0" ng-repeat="x in unique_papers">
+                                <td style="text-align: center;">{{$index+1}}</td>
+                                <td> {{x.examid}}</td>
+                                <td> {{x.papercode}}</td>
+                                <td> {{x.subject}}</td>
+                                <td style="width: 10%; font-size: larger; text-align: center;">
+                                    {{x.papersalloted.length}}
+                                </td>
+                                <td style="width: 10%; text-align: center;">
+                                    <a href="" ng-click="completed_exam(x.completed_info)"> <button type="button"
+                                            class="btn btn-outline-success">{{x.completed}}</button> </a>
+                                </td>
+                                <td style="width: 10%; text-align: center;">
+                                    <a href="" ng-click="pending_exam(x.pending_info)"> <button type="button"
+                                            class="btn btn-outline-danger">{{x.pending}}</button> </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="marksModal" tabindex="-1" aria-labelledby="marksModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style="max-width: 90%; width: 60%;">
+                <div class="modal-content ">
+                    <div class="modal-header d-flex justify-content-between align-items-center">
+                        <h5 class="modal-title" id="marksModalLabel">Marks Sheet ({{std_suc_filter[0].maskedsuc}})</h5>
+                        <div class="d-flex gap-2">
+                            <!-- <a class="btn btn-success btn-sm" href="javascript:void(0)" download="result.xls"
+                            onclick="return ExcellentExport.excel(this, 'marks_excel', 'Sheet Name Here');">
+                            <i class="fa fa-file-excel-o"></i> Excel
+                        </a> -->
+                            <button type="button" class="btn btn-secondary btn-sm ml-2"
+                                ng-click="closeModal()">Close</button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped table-bordered w-50">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;" colspan="2">Summary Report</th>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: center;">Part</th>
+                                    <th style="text-align: center;">Total Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="section in sectionTotals">
+                                    <td style="text-align: left;">{{section.sectionName}}</td>
+                                    <td style="text-align: right;">{{section.total}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><span>Grand Total</span></td>
+                                    <td style="text-align: right;" class="fw-bold">{{marks_data.subjectmarks}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                       <table id="marks_excel">
+                           <tr>
+                              <td style="display: flex;flex-wrap: wrap;gap: 13px;">
+                                 <div ng-repeat="x in marks_data.marksjson">
+                                    <div style="font-size: 1.2em; font-weight: bold; margin: 1em 0;">{{ x.Section }}
+                                 </div>
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <td style="width: 50px; text-align: center;">Q.No</td>
+                                                    <!-- <td>Questions</td> -->
+                                                    <td>Q.Marks</td>
+                                                    <td>Marks</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody ng-repeat="y in x.subsections">
+                                            <tr ng-repeat="z in y.Questions | orderBy: 'QNo'">
+                                                <td style="text-align: center;">{{z.Qlabel}}</td>
+                                                <!-- <td>{{z.question_description}}</td> -->
+                                                <td>{{z.Qmarks}}</td>
+                                                <td>
+                                                <span ng-class="{'badge bg-success text-center': z.score_status,'badge bg-secondary text-center': !z.score_status && z.applied_marks,}" style="font-size: 13px;">
+                                                    {{z.applied_marks}}
+                                                </span>
+                                                </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                      </div>
+                    </td>
+                  </tr>
+              </table>
+           </div>
+            <div class="modal-footer">
+             </div>
+        </div>
+            </div>
+        </div>
+
+        <div class="row" ng-if="exam_form == 1">
+            <div class="col">
+               <div>
+                  <table class="table table-striped table-bordered">
+                     <thead>
+                        <tr>
+                           <td style="width: 50px;text-align: center;">S.No</td>
+                            <td style="width:100%">SUC</td>
+                            <td>Marks</td>
+
+                            <td> Actions</td>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr ng-repeat="x in completed_info  | orderBy: '-updatedAt' ">
+                          <td style="text-align: center;">{{$index+1}}</td>
+                          <td style="width:100%">{{x.maskedsuc}}</td>
+                          <td style="text-align: center;">{{x.subjectmarks}}</td>
+                           <td>
+                        <div class="hstack gap-3">
+                          <a href="" ng-click="marksdata(x.maskedsuc)" class=""  style="margin-bottom: -13px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                            <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
+                             <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                            </svg>
+                            </a>
+                           <a ng-click="createSession(x)" class="text-danger" style="margin-bottom: -13px;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                 fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
+                                    <path  d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                                     <path d="M4.603 14.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.188-.012.396-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.066.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.7 11.7 0 0 0-1.997.406 11.3 11.3 0 0 1-1.02 1.51c-.292.35-.609.656-.927.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.245.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 7.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
+                                </svg>
+                            </a>
+                         </div>
+                      </td>
+                   </tr>
+                </tbody>
+            </table>
+        </div>
+            <div ng-if="completed_exams.length == 0" class="text-danger text-center" style="font-size: 18px;">
+                 {{completed_msg}}
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-if="exam_form == 2">
+            <div class="col">
+              <div>
+                  <table class="table table-striped table-bordered">
+                     <thead>
+                        <tr>
+                            <td style="width: 50px;text-align: center;">S.No</td>
+                            <td>SUC</td>
+                            <td>Status</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                           <tr ng-repeat="x in pending_info">
+                              <td style="text-align: center;">{{$index+1}}</td>
+                               <td>{{x.maskedsuc}}</td>
+                                <td style="width: 10%;">
+                                <a href="" ng-click="get_correction_paper(x)">
+                                  <button type="button" class="btn btn-primary btn-custom m-1">
+                                   <i class="bi bi-play-circle fs-4"></i>
+                                 <span>Start</span>
+                                </button>
+                              </a>
+                           </td>
+                        </tr>
+                     </tbody>
+                    </table>
+                </div>
+                <div ng-if="pending_exams.length == 0" class="text-danger text-center" style="font-size: 18px;">
+                    {{pending_msg}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

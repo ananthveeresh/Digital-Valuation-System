@@ -1,0 +1,35 @@
+
+      <div class="">
+   
+        <!-- Display Student Data -->
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between ">
+              <div *ngIf="students.length > 0">
+                <label class="mt-4 text-dark fw-bold">Section Name : {{ students.length > 0 ? students[0].section_name : '' }}</label>
+                <br>
+                <label class="text-dark fw-bold">Total No of Students: {{ students.length }}</label>
+              </div>
+              <div>
+                <button class="btn btn-light text-dark mt-3" *ngIf="showPrintButton" (click)="printDiv()"><i class="bi bi-printer-fill p-1"></i>Print</button>
+              </div>
+              </div>
+              <div id="print_div">
+            <div  *ngIf="students.length > 0">
+              <div class="barcode-container-wrapper">
+                <div *ngFor="let student of students; let i = index">
+                  <div class="barcode-container"  >
+                    <img src="https://apis.aditya.ac.in/genBarcodeQrcode/barcode/{{student.barcode_data}}" alt="Barcode" class="barcode-image">
+                    <p class="section-name text-dark" style="font-size: 14px;">{{ student.barcode_info }}</p>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+   
+  
+  

@@ -1,0 +1,546 @@
+<main id="main" class="main">
+  <section class="section dashboard">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title"> Faculty Allotment</h5>
+            </div>
+            <div class="d-flex gap-3 pt-3">
+              <select class="form-select" name="examId" [(ngModel)]="examId" (change)="get_examId($event)">
+                <option value="" selected>Select Exam Name</option>
+                <option *ngFor="let x of ExamName" [value]="x.examId">
+                  {{ x.examName }}
+                </option>
+              </select>
+              <select class="form-select" name="campusName" [(ngModel)]="campusName">
+                <option value="" selected>Select Campus</option>
+                <option *ngFor="let x of CampusList" [value]="x">
+                  {{ x }}
+                </option>
+              </select>
+
+
+              <button class="btn btn-primary" (click)="GetPaperList()">Submit</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div *ngIf="loading" class="text-center">
+        <div class="lds-ellipsis">
+
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card card-body" *ngIf="show_loading == 1">
+            <h5 class="card-title text-center text-success"> Loading.....! </h5>
+          </div>
+          <div class="card card-body" *ngIf="PaperAllocatelist.length > 0">
+
+            <!-- Bordered Tabs -->
+            <ul class="nav nav-tabs nav-tabs-bordered d-flex justify-content-end my-4 gap-5" id="borderedTab"
+              role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" (click)="GetSubjectWiseData()"
+                  data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="true">
+                  Subject Wise
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" (click)="GetFacultyWiseData()"
+                  data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile"
+                  aria-selected="false">
+                  Faculty Wise
+                </button>
+              </li>
+
+            </ul>
+            <h5 class="card-title text-start" style="margin-top: -35px; margin-bottom: -17px;">{{campusName}}</h5>
+            <div class="tab-content pt-2" id="borderedTabContent">
+              <div class="tab-pane fade active show" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
+
+                <div class="card">
+                  <div class="card-body p-3 bg-light">
+
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-hover table-sm" style="font-size: 12px;">
+                        <thead class="thead-dark">
+                          <tr class="text-center">
+                            <th colspan="4">&nbsp;</th>
+                            <th style="background-color: #cfe2ff" colspan="2"> Valuation </th>
+                            <th style="background-color: #ccf7c1" colspan="2"> Scrutiny </th>
+                            <th> &nbsp; </th>
+                          </tr>
+                          <tr class="text-center">
+                            <th>S.No</th>
+                            <th>Subject</th>
+                            <th>SubjectCode / PaperCode</th>
+                            <th>Uploaded</th>
+
+                            <th style="background-color: #cfe2ff" title="Assign papers to evaluators">Alloted</th>
+                            <th style="background-color: #cfe2ff" title="Remaining papers to be alloted">Balance</th>
+
+                            <!-- <th title="Papers Assigned for valuation">Alloted</th> -->
+                            <th style="background-color: #ccf7c1" title="Papers evaluted">Valued</th>
+                            <th style="background-color: #ccf7c1" title="Papers still waiting for scrutiny">Pending</th>
+                            <th title="Completed and verified papers">Completed</th>
+
+                            <!-- <th title="Papers that have been evaluated">Valued</th>
+                            <th style="background-color: #cfe2ff" title="Re-check and verify marks">Scrutinize</th>
+                            <th style="background-color: #cfe2ff" title="Papers awaiting scrutiny">Pending</th> -->
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="text-center" *ngFor="let x of PaperAllocatelist; let i = index">
+                            <td>{{i + 1}}</td>
+                            <td class="text-start">{{x.subject}}</td>
+                            <td>{{x.papercode}}</td>
+                            <td class="text-end" title="Total answer scripts uploaded">{{x.total}}</td>
+
+                            <td class="text-end" title="Assign papers to evaluators">
+                              <span *ngIf="x.alloted >0">{{x.alloted}}</span>
+                            </td>
+                            <td title="Remaining papers to be alloted">
+                              <span style="cursor: pointer;"
+                                class="badge rounded-pill text-bg-danger px-3 py-2 rounded-1 bt"
+                                (click)="GetAllocate(x)" data-bs-toggle="modal"
+                                data-bs-target="#availablemodal">{{x.available}}</span>
+                            </td>
+
+
+                            <!-- <td title="Papers Assigned for valuation"> {{x.alloted}} </td> -->
+                            <td title="Papers evaluted" style="text-wrap: nowrap;">
+                              <span style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#valuemodal"
+                                class="badge rounded-pill text-bg-success px-3 py-2 rounded-1 bt" *ngIf="x.corrected >0"
+                                (click)="GetValued_papers(x)">{{x.corrected}}</span>
+
+                              <!-- <span class="text-end"><i  (click)="GetStdMarks(x)" class="bi bi-file-excel text-success"></i></span> -->
+                            </td>
+                            <td class="text-end" title="Papers still waiting for scrutiny">
+                              {{x.scrutinypending}}
+                            </td>
+                            <td class="text-end" title="Completed and verified papers"> {{x.scrutinycorrected}} </td>
+
+
+                            <!-- <td title="Papers that have been evaluated">
+                              <span> {{x.corrected}} </span>
+                            </td>
+                            <td title="Re-check and verify marks">
+                              <span>5</span>
+                            </td>
+                            <td title="Papers awaiting scrutiny">
+                              15
+                            </td> -->
+                          </tr>
+
+                          <tr class="text-end">
+                            <th colspan="3">Total</th>
+                            <th>{{OverallTotal || 0}}</th>
+                            <th>{{totalAllocated || 0}}</th>
+                            <th>{{totalAvailable || 0}}</th>
+                            <th>{{totalValued || 0}}</th>
+                            <th>{{scrutinypending || 0}}</th>
+                            <th>{{scrutinycorrected || 0}}</th>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+
+
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                <div class="card">
+                  <div class="card-body p-3 bg-light">
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                          <tr>
+                            <th>S.No</th>
+
+                            <th>Paycode</th>
+                            <th>Subject</th>
+
+                            <!-- <th>FacultyName</th>    -->
+
+
+                            <th>Papercode</th>
+
+
+                            <th>Allocated</th>
+
+
+                            <th>Valued</th>
+
+                            <th>Pending</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let x of FacultyAllocationData; let i = index">
+                            <td>{{i + 1}}</td>
+                            <td>{{x.paycode}} -
+                              <span class="text-dark fw-bold">{{x.facultyinfo[0]?.facultyName}}</span>
+                            </td>
+                            <td>{{x.subject}}</td>
+                            <!-- <td class="subject-list">
+                              <ng-container *ngFor="let subject of x.facultyinfo[0].subject">
+                                  {{ subject }}<br>
+                              </ng-container>
+                          </td> -->
+
+
+                            <td>{{x.papercode}}</td>
+
+                            <td>
+                              {{x.alloted}}
+
+                            </td>
+
+                            <td>{{x.corrected}}
+                            </td>
+
+                            <td>
+                              {{x.pending}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th colspan="4" class="text-center">Totals</th>
+                            <td>{{FacAllocated}}</td>
+                            <td>{{FacValued}}</td>
+                            <td>{{FacPending}}</td>
+                          </tr>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+            <!-- End Bordered Tabs -->
+
+          </div>
+          <div class="alert alert-danger" role="alert" *ngIf="PaperAllocatelist.length == 0 && showerror == true">
+            No Allocation Mapped to this Campus
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modals -->
+
+    <div class="modal fade" id="availablemodal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="text-end">
+            <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+              <i class="bi bi-x-circle fs-6"></i>
+            </button>
+
+          </div>
+          <div class="p-3 bg-light border-bottom-0">
+
+            <div class="modal-title d-flex align-items-center justify-content-between">
+              <div class="flex-grow-1">
+
+                <h1 class="mhdng">Faculty Allotment Map</h1>
+                <div class="m_muted"> {{staffinfo?.subject}}</div>
+
+
+              </div>
+              <div class="as">
+                <h1 class="mhdng2">{{staffinfo.total_available}}</h1>
+                <div class="m_muted">Balance</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-body">
+            <div class="row mt-2">
+              <div class="col-md-12" *ngIf="staffinfo.length > 0">
+                <div class="table-responsive">
+                  <table class="table table-bordered ">
+                    <thead>
+                      <tr class="table-primary">
+                        <th>S.No</th>
+                        <th>Paycode</th>
+                        <th>Faculty Name</th>
+                        <th class="text-center">Alloted</th>
+                        <th class="text-center">Valued</th>
+                        <th class="text-center">Pending</th>
+                        <th class="text-center">Deallocate</th>
+                        <th class="text-center">Allocate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of staffinfo; let i =index">
+                        <td>{{i+1}}</td>
+                        <td>{{x.paycode}}</td>
+                        <td>{{x.facultyName}}</td>
+                        <td class="text-center">
+                          {{x.alloted || 0}}
+                        </td>
+                        <td class="text-center">
+                          {{x.valued || 0}}
+                        </td>
+                        <td class="text-center">
+                          {{x.pending || 0}}
+                        </td>
+                        <td class="text-center"> <i *ngIf="x.pending > 0" (click)="remove_allocations(x)"
+                            style="cursor: pointer;" class="bi bi-trash3-fill text-danger" data-bs-dismiss="modal"></i>
+
+                        </td>
+                        <td *ngIf="staffinfo.total_available >= 0">
+                          <input type="text" class="form-control" (input)="check_balance_papers()"
+                            [(ngModel)]="x.allocatevalue"
+                            [disabled]="staffinfo.total_available === 0 && avaliable_papers === 0">
+                        </td>
+
+                        <td *ngIf="staffinfo.total_available < 0">
+                          <input type="text" class="form-control" (input)="check_balance_papers()"
+                            [(ngModel)]="x.allocatevalue" [disabled]="true">
+                        </td>
+                      </tr>
+                      <tr class="text-center">
+                        <th colspan="3" class="text-end">Total</th>
+                        <th>{{staffinfo.total_alloted}}</th>
+                        <th>{{staffinfo.total_corrected}}</th>
+                        <th>{{staffinfo.total_pending}}</th>
+                        <th> </th>
+                        <th> </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <br />
+              </div>
+              <div *ngIf="staffinfo.length == 0">
+                <div class="text-center text-danger mb-3">No Faculty Available</div>
+              </div>
+
+              <div class="modal-footer" *ngIf="staffinfo.length > 0">
+                <div class="row">
+                  <div class="col-md-6 text-end">
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"
+                      (click)="AllocateFaculty()"
+                      [disabled]="staffinfo.total_available < 0 || (staffinfo.total_available === 0 && avaliable_papers === 0)">
+                      Submit
+                    </button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="allotedmodal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-light border-bottom-0">
+            <h5 class="modal-title d-flex align-items-center">
+            </h5>
+            <span class="me-2"><b>Faculty Alloted Information</b></span>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-bordered" style="font-size: 14px;">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>Paycode</th>
+                        <th>Faculty Name</th>
+                        <th class="text-center">Alloted</th>
+                        <!-- <th>Link</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of AllocatedPapers; let i = index" style="font-size: 12px;">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{x.paycode}}</td>
+                        <td>{{x.staffinfo}}</td>
+                        <td class="text-center"><span class="badge rounded-pill text-bg-success">{{x.alloted}}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <br />
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="pendingmodal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-light border-bottom-0">
+            <h5 class="modal-title d-flex align-items-center">
+            </h5>
+            <span class="me-2"><b>Papars Pending Information | <span class="text-muted"> {{selected_pending_sub}}
+                </span> </b>
+            </span>
+          </div>
+
+          <div class="modal-body">
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-bordered" style="font-size: 14px;">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>Paycode</th>
+                        <th>Faculty Name</th>
+                        <th class="text-center">Pending / Alloted</th>
+                        <th class="text-center">UnAllocate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of pendingPapers; let i = index" style="font-size: 12px;">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{x.paycode}}</td>
+                        <td>{{x.staffinfo}}</td>
+                        <td class="text-center">
+                          <span class="badge rounded-pill text-bg-warning">{{x.pending}}</span> / <span
+                            class="badge rounded-pill text-bg-success">{{x.alloted}}</span>
+                        </td>
+                        <td class="text-center"> <i (click)="remove_allocations(x)" style="cursor: pointer;"
+                            class="bi bi-trash3-fill text-danger" data-bs-dismiss="modal"></i> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <br />
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="valuemodal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="text-end">
+            <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+              <i class="bi bi-x-circle fs-6"></i>
+            </button>
+
+          </div>
+          <div class="p-3 bg-light border-bottom-0">
+
+            <div class="modal-title d-flex align-items-center justify-content-between">
+              <div class="flex-grow-1">
+
+                <h1 class="mhdng">Scrutiny Allotment</h1>
+                <div class="m_muted"> {{selected_pending_sub}}</div>
+
+
+              </div>
+              <div class="as">
+                <h1 class="mhdng2">{{valued_papers?.scrutinypending}}</h1>
+                <div class="m_muted">Balance</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-body">
+            <div class="row mt-2">
+              <div class="col-md-12" *ngIf="valued_papers.length > 0">
+                <div class="table-responsive">
+                  <table class="table table-bordered ">
+                    <thead>
+                      <tr class="text-center" style="background-color: #ccf7c1">
+                        <th>S.No</th>
+                        <th>Paycode</th>
+                        <th>Name</th>
+                        <th class="text-center">Valued</th>
+                        <th class="text-center">Scrutinized</th>
+                        <th class="text-center">Pending</th>
+                        <th class="text-center">DeAllocate</th>
+                        <th class="text-center">Allocate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of valued_papers; let i =index">
+                        <td>{{i+1}}</td>
+                        <td>{{x.paycode}}</td>
+                        <td>{{x.facultyName}}</td>
+
+                        <td class="text-center"> {{x.alloted || 0}} </td>
+                        <td class="text-center"> {{x.valued || 0}} </td>
+                        <td class="text-center"> {{x.pending || 0}} </td>
+                        <td class="text-center"> <i style="cursor: pointer;" (click)="remove_scrutiny_allocations(x)"
+                            class="bi bi-trash3-fill text-danger" data-bs-dismiss="modal"></i>
+                        </td>
+                        <td><input type="text" class="form-control" (input)="check_balance_scrutiny_papers()"
+                            [(ngModel)]="x.allocatevalue"></td>
+                      </tr>
+
+                      <tr class="text-center">
+                        <th colspan="3" class="text-end">Total</th>
+                        <th>{{valued_papers.total_alloted}}</th>
+                        <th>{{valued_papers.total_valued}}</th>
+                        <th>{{valued_papers.total_pending}}</th>
+                        <th> </th>
+                        <th> </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <br />
+              </div>
+              <div *ngIf="valued_papers.length == 0">
+                <div class="text-center text-danger mb-3">No Srutiny Faculty Available</div>
+              </div>
+
+              <div class="modal-footer" *ngIf="valued_papers.length > 0">
+                <div class="row mt-2">
+                  <div class="col-md-6 text-end">
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"
+                      (click)="Allocatescrutiny()">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modals Ended -->
+
+  </section>
+</main>

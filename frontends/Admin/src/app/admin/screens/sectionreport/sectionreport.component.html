@@ -1,0 +1,84 @@
+<main id="main" class="main">
+  <section class="section dashboard">
+    <div class="row">
+      <div class="card">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="card-title">Section Report</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex gap-3 pt-3 align-items-center">
+            <div class="d-flex flex-column col-md-3">
+              <select name="examName" [(ngModel)]="examId" class="form-select" (change)="get_campus_list(examId)">
+                <option value="" selected>Select Exam Name</option>
+                <option *ngFor="let x of UniqueDataExamId" [value]="x.examId">
+                  {{ x.examName }}
+                </option>
+              </select>
+            </div>
+            <div class="d-flex flex-column col-md-3">
+              <select name="examName" [(ngModel)]="Branch" class="form-select" (change)="getExamId(examId,Branch)">
+                <option value="" selected>Select Branch</option>
+                <option value="{{x.campus_id}}" *ngFor="let x of campus_data">{{x.campus_name}}</option>
+              </select>
+            </div>
+            <div class="d-flex flex-column col-md-3">
+              <select name="Sec_id" [(ngModel)]="Sec_id" class="form-select">
+                <option value="" selected>Select Section</option>
+                <option value="{{x.sec_id}}" *ngFor="let x of Sectionslist">{{x.section_name}}</option>
+              </select>
+            </div>
+            <button class="btn btn-primary align-self-end" (click)="GetResult()">Submit</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="SectionReportData.length>0">
+        <div class="col-md-12 d-flex align-items-center">
+          <i class="ri-file-excel-fill text-primary ms-auto" (click)="exportToExcel()"
+            style="cursor: pointer; font-size: 24px; width: 55px; height: 38px;"></i>
+        </div>
+
+
+        <div class="card-body">
+          <table class="table table-hover table-striped table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th class="text-center">S.No</th>
+                <th class="text-center">Branch</th>
+                <th class="text-center">Roll No</th>
+                <th class="text-center">Suc</th>
+                <th class="text-center">Student Name</th>
+                <th class="text-center">Group</th>
+                <ng-container *ngFor="let x of SectionReportData[0].marksobj">
+                  <th class="text-center subject-header" title="{{x.subject}}">{{x.subject.slice(0, 8)}}</th>
+                </ng-container>
+                <th class="text-center">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of SectionReportData; let i = index" class="align-middle">
+                <td class="text-center">{{i + 1}}</td>
+                <td class="text-center">{{x.branch}}</td>
+                <td class="text-center">{{x.roll_no}}</td>
+                <td class="text-center">{{x.suc}}</td>
+                <td>{{x.studentName}}</td>
+                <td>{{x.course}}</td>
+                <ng-container *ngFor="let y of x.marksobj">
+                  <td class="text-center">{{y.marks}}</td>
+                </ng-container>
+                <td class="text-center">{{x.totalMarks}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+      <div class="card" *ngIf="show_data == 1">
+        <div class="card-body">
+          <h5 class="text-center text-danger mt-2"> *** No Data Found *** </h5>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

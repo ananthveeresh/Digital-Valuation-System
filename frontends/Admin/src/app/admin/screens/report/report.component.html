@@ -1,0 +1,211 @@
+<main id="main" class="main">
+  <section class="section dashboard">
+    <div class="row">
+      <div class="card">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="card-title">Exam Result</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex gap-3 pt-3 align-items-center">
+            <div class="d-flex flex-column col-md-3">
+              <select name="examName" [(ngModel)]="examId" class="form-select" (change)="getexamId(examId)">
+                <option value="" selected>Select Exam Name</option>
+                <option *ngFor="let x of UniqueDataExamId" [value]="x.examId">
+                  {{ x.examName }}
+                </option>
+              </select>
+            </div>
+            <div class="d-flex flex-column col-md-3">
+              <select name="campusName" [(ngModel)]="campusName" class="form-select" (change)="getcampus($event)">
+                <option value="" selected>Select Campus</option>
+                <option *ngFor="let x of CampusList" [value]="x">
+                  {{ x }}
+                </option>
+              </select>
+            </div>
+
+            <div class="d-flex flex-column col-md-3" *ngIf="examId == '26388'">
+              <select name="PaperCode" [(ngModel)]="PaperCode" class="form-select" (change)="onPaperCodeChange($event)">
+                <option value="" selected>Select Subject Name</option>
+                <option *ngFor="let x of SubjectData" [value]="x.papercode">
+                  {{x.subjectName }}--- {{x.subjectcode}}
+                </option>
+              </select>
+            </div>
+
+            <div class="d-flex flex-column col-md-3" *ngIf="examId != '26388'">
+              <select name="PaperCode" [(ngModel)]="PaperCode" class="form-select" (change)="onPaperCodeChange($event)">
+                <option value="" selected>Select Subject Name</option>
+                <option *ngFor="let x of SubjectData" [value]="x.subjectcode">
+                  {{x.subjectName }}--- {{x.subjectcode}}
+                </option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary align-self-end" (click)="GetResult()">Submit</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="displayedData.length>0">
+        <div class="row m-3">
+          <div class="col-md-9 text-start">
+
+            <h5 class="card-title" style="margin-bottom: -25px; margin-top: -10px;">{{campusName}}</h5>
+          </div>
+          <div class="col-md-3 text-end">
+            <button class="btn btn-outline-success btn-sm" (click)="GetStdMarks()" >Download Excel</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <table class="table table-responsive table-bordered">
+            <thead class="thead-dark">
+              <tr class="text-center table-primary">
+                <th>S.No</th>
+                <th>Branch</th>
+                <th>Suc</th>
+                <th>Student Name</th>
+                <th>Section</th>
+                <th>Mobile</th>
+                <th>Marks</th>
+                <th>View Individual Marks</th>
+                <th>Get Pdf Report</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of displayedData; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{x.branch}}</td>
+                <td>{{x.suc}}</td>
+                <ng-container *ngFor="let y of x.studentinfo">
+                  <td>{{y.student_name}}</td>
+                  <td>{{y.section_name}} / {{y.roll_no}}</td>
+                  <td>{{y.mobile_no}}</td>
+                </ng-container>
+                <td *ngIf="x.subjectmarks" style="text-wrap: nowrap;">{{x.subjectmarks}} / {{x.individualTotal}}</td>
+                <td *ngIf="!x.subjectmarks">-</td>
+                <td class="text-center" *ngIf="x.marksjson.length > 0"
+                  (click)="ViewIndividualMarks(x.marksjson, x.subjectmarks)">
+                  <span class="text-success" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                    <i class="bi bi-eye" style="cursor: pointer; font-size: 24px; width: 15px; height: 15px;"></i>
+                  </span>
+                </td>
+                <td class="text-center" *ngIf="x.marksjson.length ==0">
+                  <span class="text-primary">
+                    <i class="bi bi-eye-slash text-danger"
+                      style="cursor: pointer; font-size: 24px; width: 15px; height: 15px;"></i>
+                  </span>
+                </td>
+                <td class="text-center" *ngIf="x.marksjson.length > 0">
+                  <a *ngIf="x.newFilePath" href="{{path_check(x.newFilePath,x)}}" target="_blank">
+                    <i class="bi bi-file-earmark-pdf text-primary"
+                      style="cursor: pointer; font-size: 24px; width: 32px; height: 32px;"></i>
+                  </a>
+                </td>
+                <td class="text-center" *ngIf="x.marksjson.length == 0">
+                  <span class="text-primary">
+                    <i class="bi bi-file-earmark-excel text-danger"
+                      style="cursor: pointer; font-size: 24px; width: 15px; height: 15px;"></i>
+                  </span>
+
+                </td>
+                <td class="text-center" *ngIf="x.marksjson.length > 0">
+                  <span class="text-primary">
+                    <i class="bi bi-trash text-danger"
+                      style="cursor: pointer; font-size: 24px; width: 15px; height: 15px;" (click)="DeleteData(x)"></i>
+                  </span>
+
+                </td>
+                <td *ngIf="x.marksjson.length == 0">
+                  <span>
+                    &nbsp;
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card card-body" *ngIf="displayedData.length == 0 && show_error == 1">
+        <h5 class="card-title text-center text-danger"> *** No Data Found *** </h5>
+      </div>
+
+      <div class="card card-body" *ngIf="show_loading == 1">
+        <h5 class="card-title text-center text-success"> Loading.....! </h5>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="verticalycentered" tabindex="-1" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-light border-bottom-0 d-flex justify-content-between align-items-center">
+            <div class="col-md-10 d-flex align-items-center">
+              <h5 class="modal-title" id="marksModalLabel" style="margin: 0;">Individual Marks <i
+                  class="bi bi-file-excel text-primary" (click)="exportToExcel()"
+                  style="cursor: pointer; font-size: 24px; width: 32px; height: 32px;"></i></h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body" *ngIf="marksJson.length > 0">
+            <div class="row mt-2">
+              <div class="col-md-12" style="max-width:100%; max-height:100%;">
+                <div class="table-responsive">
+                  <table class="table table-bordered" *ngFor="let x of marksJson">
+                    <thead class="bg-light">
+                      <tr style="font-size: 12px;">
+
+                        <th>Q.No</th>
+                        <th>Section</th>
+                        <th>Questions</th>
+                        <th>QMarks</th>
+                        <th>AppliedMarks</th>
+                      </tr>
+                    </thead>
+                    <tbody *ngFor="let y of x.subsections">
+                      <tr *ngFor="let z of y.Questions">
+
+                        <td style="text-align: center;">{{ z.Qlabel }}</td>
+                        <td>{{x.Section}}</td>
+                        <td>{{ z.question_description }}</td>
+                        <td>{{ z.Qmarks }}</td>
+                        <td class="text-center">
+                          <div
+                            [ngClass]="{'custom_badge_success': z.score_status, 'custom_badge_secondary': !z.score_status && z.applied_marks}">
+                            {{ z.applied_marks }}</div>
+                        </td>
+
+
+                      </tr>
+                      <tr>
+                        <td colspan="4" style="text-align: right; font-weight: bold;">Total</td>
+                        <td style="text-align: center; font-weight: bold;">
+                          {{calculateSubsectionTotal(y.Questions)}}
+                        </td>
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+                  <div style="text-align: right;font-weight: bold;margin-bottom: 15px;margin-right: 19px">
+                    <span>Grand Total: {{subjectmarks}}</span>
+
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+          <div *ngIf="marksJson.length == 0">
+            <div class="text-center text-danger mb-3">No Faculty Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Ends -->
+  </section>
+</main>

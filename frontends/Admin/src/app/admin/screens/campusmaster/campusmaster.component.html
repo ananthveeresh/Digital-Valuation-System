@@ -1,0 +1,29 @@
+<main id="main" class="main">
+    <section class="section dashboard">
+        <div class="row">
+            <div class="card">
+                <div class="card-title"> Campus Master </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr class="text-center table-primary">
+                                <th>S.no</th>
+                                <th>Campus Name</th>
+                                <th>City</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-start" *ngFor="let x of campus_list; let i=index">
+                                <th class="text-center" > {{i+1}} </th>
+                                <td> {{x.campus_name}} </td>
+                                <td> {{x.campus_city}} </td>
+                                <td> {{x.campus_address}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

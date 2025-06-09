@@ -1,0 +1,280 @@
+<main id="main" class="main">
+  <section class="section dashboard">
+    <div class="row">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Semester - 2 </h5>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <select name="selected_campus" [(ngModel)]="selected_campus" class="form-select"
+                (change)="on_cmp_change()">
+                <option value="" selected>Select Branch</option>
+                <option *ngFor="let campus of campus_list" [value]="campus.campus_name">{{ campus.campus_name }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary " (click)="GetResult()" [disabled]="selected_campus == ''">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="show_certificates == 1">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center m-2">
+            <div class="mt-2 me-2 fw-bold">
+              Students Count - <span class="text-danger"> {{ student_list?.length || 0 }}</span>
+            </div>
+            <div>
+              <i class="bi bi-file-earmark-excel text-success" style="cursor: pointer; font-size: 25px;"
+                (click)="exportToExcel()"> </i>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Date</th>
+                  <th>Campus Name</th>
+                  <th>Section Name</th>
+                  <th>Course</th>
+                  <th>Suc</th>
+                  <th>Student Name</th>
+                  <th>Mobile</th>
+                  <th>Aadhar Number</th>
+                  <th>Fee Status</th>
+                  <th>View Info</th>
+                  <!-- <th>Hall Ticket</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let x of student_list; let i=index">
+                  <th> {{i+1}} </th>
+                  <td> {{x.createdAt | date :'dd-MM-yy'}} </td>
+                  <td> {{x.studentinfo[0].campus_name}} </td>
+                  <td> {{x.studentinfo[0].section_name}} </td>
+                  <td> {{x.course[0].full_course_name}} </td>
+                  <td> {{x.suc}} </td>
+                  <td> {{x.studentname}} </td>
+                  <td> {{x.studentmobilenumber}} </td>
+                  <td> {{x.studentaadhaarnumber}} </td>
+                  <td class="text-center"class="text-success">Paid </td>
+                  <td class="text-center" style="font-size:large"> <i class="bi bi-eye text-success"
+                      (click)="getPreview(x)" style="cursor: pointer"></i> </td>
+                  <!-- <td class="text-center">
+                    <i style="cursor: pointer;" (click)="getHallTicket(i,x.suc, x.studentinfo[0].campus_name)"
+                      class="bi bi-filetype-pdf fs-4 text-danger"></i>
+                  </td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="show_certificates == 2">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="card-title">{{ selectedStdInfo?.studentname }}'s <span class="card-title text-danger">INFO</span>
+          </h5>
+          <div class="col-md-0">
+            <div class="flex">
+              <!-- <button class="btn btn-primary btn-sm me-2" (click)="Edit()">Edit </button> -->
+              <button class="btn btn-primary btn-sm" (click)="show_certificates = 1">Back </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="p-4 mb-4">
+          <h6 class="carda-title text-primary mb-3">
+            <i class="bi bi-info-circle-fill"></i> Student Information
+          </h6>
+          <hr />
+          <div class="row g-3">
+            <div class="col-lg-4">
+              <label class="form-label fw-bold">Course</label>
+              <p>{{ selectedStdInfo?.course[0].full_course_name }}</p>
+            </div>
+            <div class="col-lg-4">
+              <label class="form-label fw-bold">Second Language</label>
+              <p>{{ selectedStdInfo?.language }}</p>
+            </div>
+            <div class="col-lg-4">
+              <label class="form-label fw-bold">SUC Number</label>
+              <p>{{ selectedStdInfo?.suc }}</p>
+            </div>
+            <div class="col-lg-4">
+              <label class="form-label fw-bold">Name of the Student</label>
+              <p>{{ selectedStdInfo?.studentname }}</p>
+            </div>
+            <div class="col-lg-4">
+              <label class="form-label fw-bold">Email</label>
+              <p>{{ selectedStdInfo?.studentemail }}</p>
+            </div>
+            <div class="col-lg-4">
+              <label class="form-label fw-bold">Mobile</label>
+              <p>{{ selectedStdInfo?.studentmobilenumber }}</p>
+            </div>
+            <div class="col-lg-4">
+              <label class="form-label fw-bold">Whatsapp Number</label>
+              <p>{{ selectedStdInfo?.studentwhatsappnumber }}</p>
+            </div>
+            <div class="col-lg-4">
+              <label class="form-label fw-bold">Gender</label>
+              <p>{{ selectedStdInfo?.gender }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 mb-4">
+          <h6 class="carda-title text-success mb-3">
+            <i class="bi bi-book"></i> Educational Details
+          </h6>
+          <hr />
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Ssc Board</label>
+              <p>{{ selectedStdInfo?.sscboard }}</p>
+              <label class="form-label fw-bold">Ssc HallTicket Number</label>
+              <p>{{ selectedStdInfo?.sschallticketnumber }}</p>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Ssc Grade</label>
+              <p>{{ selectedStdInfo?.sscgpa }}</p>
+              <label class="form-label fw-bold">Ssc PassedOut Year</label>
+              <p>{{ selectedStdInfo?.sscyearofpass }}</p>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Inter Board</label>
+              <p>{{ selectedStdInfo?.interboard }}</p>
+              <label class="form-label fw-bold">Inter HallTicket Number</label>
+              <p>{{ selectedStdInfo?.interhallticketnumber }}</p>
+
+
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Inter Percentage</label>
+              <p>{{ selectedStdInfo?.interpercentage }}</p>
+              <label class="form-label fw-bold">Inter PassedOut Year</label>
+              <p>{{ selectedStdInfo?.interyearofpass }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 mb-4" *ngIf="selectedStdInfo?.paymentinfo.length > 0">
+          <h6 class="carda-title text-danger mb-3">
+            <i class="bi bi-currency-rupee"></i> Payment Details
+          </h6>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Paid Date</th>
+                <th>Fee name</th>
+                <th>Receipt Number</th>
+                <th>Paid Amount</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of selectedStdInfo?.paymentinfo; let i = index">
+                <td>{{ x.cheque_date || x.date | date:'dd/MM/yyyy' }}</td>
+                <td>{{ x.fee_name }}</td>
+                <td>{{ x.reciept_no || x.receipt_no }}</td>
+                <td>{{ x.amount_paid || x.amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-4 mb-4">
+          <h6 class="carda-title text-warning mb-3">
+            <i class="bi bi-person-fill"></i> Personal Details
+          </h6>
+          <hr />
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Religion</label>
+              <p>{{ selectedStdInfo?.religion }}</p>
+              <label class="form-label fw-bold">Reservation Category</label>
+              <p>{{ selectedStdInfo?.reservation }}</p>
+
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Aadhar No</label>
+              <p>{{ selectedStdInfo?.studentaadhaarnumber }}</p>
+              <label class="form-label fw-bold">Moles</label>
+              <ul>
+                <li>{{selectedStdInfo?.mole1}}</li>
+                <li>{{selectedStdInfo?.mole2}}</li>
+              </ul>
+
+            </div>
+
+            <div class="col-md-4">
+
+              <label class="form-label fw-bold">Father Name</label>
+              <p>{{ selectedStdInfo?.fathername }}</p>
+              <label class="form-label fw-bold">Father Number</label>
+              <p>{{ selectedStdInfo?.fathermobilenumber }}</p>
+            </div>
+            <div class="col-md-4">
+
+              <label class="form-label fw-bold">Mother Name</label>
+              <p>{{ selectedStdInfo?.mothername }}</p>
+              <label class="form-label fw-bold">Mother Number</label>
+              <p>{{ selectedStdInfo?.mothermobilenumber }}</p>
+
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Physically Challenged</label>
+              <p>{{ selectedStdInfo?.physicallychallenged }}</p>
+              <label class="form-label fw-bold">Student Address</label>
+              <p>{{ selectedStdInfo?.studentaddress }}</p>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 mb-4">
+          <h6 class="carda-title text-info mb-3">
+            <i class="bi bi-file-earmark-text"></i> Uploaded Certificates
+          </h6>
+          <hr />
+          <div class="row g-3">
+            <div class="col-md-3 col-6" *ngFor="let x of selectedStdInfo?.certificates">
+              <div class="d-flex justify-content-between">
+                <label class="form-label fw-bold">
+                  <a [href]="x.fileurl?.changingThisBreaksApplicationSecurity || x.fileurl" target="_blank"
+                    class="text-decoration-none text-dark">
+                    <i class="bi bi-cloud-arrow-down me-1 fs-5"></i>{{ x?.docType }}
+                  </a>
+                </label>
+              </div>
+              <div class="certificate-preview border rounded p-2" style="height: 200px;">
+                <span *ngIf="x?.mimetype === 'application/pdf'">
+                  <iframe [src]="pdf_url_sanitize(x?.fileurl)" class="w-100" height="180px" frameborder="0">
+                  </iframe>
+                </span>
+                <span *ngIf="x?.mimetype !== 'application/pdf'">
+                  <a [href]="x.fileurl?.changingThisBreaksApplicationSecurity || x.fileurl" target="_blank"
+                    class="text-decoration-none">
+                    <img [src]="x.fileurl" class="img-fluid rounded shadow" style="width: 100px;" alt="Certificate">
+                  </a>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <app-downloadhallticket (RegistrationStd)="update_hallticket($event)"
+      *ngIf="hallticket==1"></app-downloadhallticket>
+  </section>
+</main>

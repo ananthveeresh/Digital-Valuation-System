@@ -1,0 +1,29 @@
+.custom_badge_secondary {
+    background-color: #6c757d; 
+    color: #fff;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 28px;
+    font-size: 15px;
+    width: 29px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  .custom_badge_success {
+    background-color: #28a745; 
+    color: #fff;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 28px;
+    font-size: 15px;
+    width: 29px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  

@@ -1,0 +1,136 @@
+<main id="main" class="main">
+    <section class="section">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12" *ngIf="ShowFac == 0">
+            <div class="card">
+              <div class="card-body">
+              <div class="d-flex justify-content-between">
+
+                <div class="col-md-11">
+                  <h5 class="card-title">Create <span>| Faculty</span></h5>
+                </div>
+                <div class="col-md-0 mt-2">
+                  <button class="btn btn-primary" (click)="GetFaculityList()">List</button>
+                </div>
+              </div>
+                <form class="row g-3" [formGroup]="CreateFaculty" (ngSubmit)="FacultyCreate()">
+                    <div class="col-12">
+                        <label for="inputEmail4" class="form-label"><b>Branch Name</b></label>
+                        <select name="facultyBranch" class="form-control" (change)="getsubjectlist()" formControlName="facultyBranch">
+                            <option value="" selected>Select Branch</option>
+                            <option value="{{x.campus_name}}" *ngFor="let x of campus_data ">{{x.campus_name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                      <label for="inputEmail4" class="form-label"><b>Mobile</b></label>
+                      <input type="number" placeholder="Enter Mobile Number" class="form-control" formControlName="facultyMobile" />
+                    </div>
+                    <div class="col-12">
+                        <label for="inputEmail4" class="form-label"><b>Paycode / Mobile Number</b></label>
+                        <input type="number" placeholder="Enter Paycode" maxlength="7" minlength="7" class="form-control" formControlName="facultyPayCode" />
+                       
+                    </div>
+                  <div class="col-12">
+                    <label for="inputEmail4" class="form-label"><b>Faculty Name</b></label>
+                    <input type="text" placeholder="Enter Name" class="form-control" formControlName="facultyName" />
+                  </div>
+                  <div class="col-12">
+                    <label for="inputEmail4" class="form-label"><b>Subject Name</b></label>
+                    <select name="facultySubject" class="form-control" formControlName="facultySubject">
+                        <option value="" selected>Select Subject</option>
+                        <option value="{{x.subjectName}}" *ngFor="let x of GetList">{{x.subjectName}} -- {{x.subjectcode}}</option>
+                    </select>
+                </div>
+                  <div class="col-12">
+                    <label for="inputEmail4" class="form-label"><b>Email</b></label>
+                    <input type="email" placeholder="Enter Email" class="form-control" formControlName="facultyEmail" />
+                  </div>
+                
+                  <div class="col-12">
+                    <label for="inputEmail4" class="form-label"><b>Faculty Type</b></label>
+                    <select name="facultytype" class="form-control" formControlName="facultytype">
+                        <option value="" selected>Select</option>
+                        <option value="Valuer">Valuer</option>
+                        <option value="Scrutiny">Scrutiny</option>
+                    </select>
+                  </div>
+                  <div class="col">
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary" [disabled]="CreateFaculty.invalid">Submit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+         <div class="col-md-12" *ngIf="ShowFac == 1">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title">Faculty <span>| List</span></h5>
+                <div class="d-flex gap-2">
+                  <select name="GetBranch" class="form-select form-select-sm" [(ngModel)]="GetBranch">
+                    <option value="" selected>Select Branch</option>
+                    <option value="{{x.campus_shortcode}}" *ngFor="let x of campus_data ">{{x.campus_shortcode}}</option>
+                  </select>
+                 
+                  <select name="facuty_type" class="form-select form-select-sm" [(ngModel)]="facuty_type">
+                    <option value="" selected>Select Type</option>
+                    <option value="Valuer">Valuer</option>
+                    <option value="Scrutiny">Scrutiny</option>
+                  </select>
+
+                  <div class="col">
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary btn-sm" (click)="GetFacultyList()" [disabled]="isDisabled()">Submit</button>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="text-center text-danger" style="font-size: larger; cursor: pointer;">
+                      <i class="bi bi-backspace" (click)="GetFacultyCreation()"></i>
+                      <!-- <button type="submit" class="btn btn-primary btn-sm" (click)="GetFacultyCreation()">Back</button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive" *ngIf="FacData.length > 0">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">S.No</th>
+                      <th scope="col">Branch</th>
+                      <th scope="col">Paycode</th>
+                      <th scope="col">Faculty Name</th>
+                      <th scope="col">Subject</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Mobile</th>
+                      <th scope="col">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of FacData; let i = index">
+                      <td>{{i + 1}}</td>
+                      <td>{{x.branch}}</td>
+                      <td>{{x.paycode}}</td>
+                      <td>{{x.facultyName}}</td>
+                      <td>{{x.subject}}</td>
+                      <td>{{x.email}}</td>
+                      <td>{{x.mobile}}</td>
+                      <td (click)="RemoveFaculty(x)" style="cursor: pointer;"> <span class="text-danger"><i class="bi bi-trash"></i></span></td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+              <ng-container  *ngIf="FacData.length == 0">
+                <div  class="text-center text-danger">No Faculty Found.</div>
+              </ng-container>
+            </div>
+          </div>
+          
+         </div>
+        </div>
+      </div>
+    </section>
+  </main>

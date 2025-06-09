@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="pdfAnnotationApp2">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paper Valuation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="style2.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+
+    <script src="app2.js"></script>
+    <script src="pdfAnnotationDirective2.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#sidebarCollapse").on("click", function () {
+                $("#sidebar").toggleClass("active");
+                $("#content").toggleClass("active");
+            });
+        });
+
+    </script>
+</head>
+
+<body ng-controller="PdfAnnotationController2">
+    <div id="sidebar" class="px-3 shadow" style="padding-bottom: 100px;">
+        <div class="sidefooter mt-2">
+            <div class="row">
+                <div class="hstack justify-content-between  mb-3">
+
+                    <button class="btn btn-sm btn-outline-dark w-100 text-center" ng-click="gotohome()">
+
+                        <i class="fa fa-home"></i>&nbsp;
+                        <start>Home</start>
+                    </button>
+
+                </div>
+                <div class="border-bottom mb-3 pb-2">
+                    <div class="text-muted small">Hall Ticket:</div>
+                    <div>
+                        <small class="subleft" title={{correctionpaperinfo.subject}}>
+                            {{correctionpaperinfo.maskedsuc}}
+                        </small>
+                    </div>
+                </div>
+
+
+
+                <div class="" ng-repeat="x in total_questios">
+                    <aside class="sectionPart mb-3">
+                        <div class="d-flex justify-content-between text-uppercase fw-bolder">
+                            <span>{{x.Section}}</span>
+                            <span>
+                                {{x.MustAnswerQuestions}}
+                                <span style="font-size:9px">x</span>
+                                {{x.EachQuestion}}=&nbsp;&nbsp;{{x.TotalMaxmarks}}
+                            </span>
+
+                        </div>
+
+                        <div class="vstack">
+                            <span style="font-size: 10px" title={{x.SectionInstruction}}
+                                class="border-top mt-2 text-muted">{{x.SectionInstruction}}</span>
+                        </div>
+                        <article>
+                            <div ng-if="x.SectionDivider != 'or'" class="TotalWarper mt-2">
+
+                                <div class="" ng-repeat="y in x.subsections[0].Questions">
+
+                                    <div class="hstack gap-1" style="margin-bottom: 8px;">
+                                        <span style="font-size: 11px;">
+                                            {{y.Qlabel}}.
+                                        </span>
+                                        <input type="number" ng-class="y.applied_marks ? 'choice_marks' : ''" ng-change="on_cursor_check(y)"
+                                            class="form-control  text_sm" ng-model="y.applied_marks"
+                                            ng-focus="y.applied_marks = ''" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div ng-if="x.SectionDivider == 'or'">
+                                <div class="d-flex flex-wrap mt-2">
+                                    <div ng-repeat="y in x.subsections" class="TotalWarper">
+                                        <span ng-repeat="z in y.Questions track by $index"
+                                            ng-init="questionIndex = $index">
+
+                                            <div class="hstack gap-1" style="margin-bottom: 8px;">
+                                                <span class="text-dark options">{{z.Qlabel}}</span>
+                                                <input type="number" ng-class="(z.applied_marks !== undefined && z.heighest_choice) ? 'choice_marks' : (z.applied_marks !== undefined ? 'choice_marks_default' : '')" class="form-control text_sm flex-grow-1"  ng-model="z.applied_marks" ng-change="choice_marks_check(y)"/>
+                                            </div>
+                                            <!-- <div class="hstack gap-1" style="margin-bottom: 8px;"
+                                                ng-class="{'choice_marks': z.applied_marks === getHighestAppliedMarks(x.questions), 'choice_marks_default': z.applied_marks !== getHighestAppliedMarks(x.questions)}">
+                                                <span class="text-dark options">{{z.Qlabel}}</span>
+                                                <input type="number" class="form-control text_sm flex-grow-1"
+                                                    ng-model="z.applied_marks" />
+                                            </div> -->
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </aside>
+
+
+                </div>
+            </div>
+            <div>
+
+                <table class="table table-sm  table-bordered w-100   hdng stable">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;color:#ff771d !important;font-weight: 600;background: #ff771d40 !important;"
+                                colspan="2" class="hdng">Summary Report</th>
+                        </tr>
+                        <tr>
+                            <th class="hdng">Part</th>
+                            <th class="hdng">Total Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="section in total_questios">
+                            <td>{{section.Section }}</td>
+                            <td>{{section.total}}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="hdng fw-bold">Grand Total</span></td>
+                            <td>{{grandTotal}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="border" style="background: #dbebe136;    border-radius: 4px;">
+                <div style="color:#07933d;background: #d1e1d7;" class="text-center">
+                    <span class="d-block" style="height: 28px;line-height: 28px;font-weight: 600;font-size: 13px;">Pages
+                        Visited </span>
+                </div>
+
+
+                <div class="pagesvisited">
+                    <button ng-repeat="i in total_no_of_pages" ng-click="get_page(i)" ng-class="{'btn btn-sm btn-danger m-1': pageNum == i, 
+      'btn btn-sm btn-success m-1': visitedPages.includes(i), 
+      'btn btn-sm btn-outline-primary m-1': !visitedPages.includes(i) && pageNum != i}">
+                        {{i}}
+                    </button>
+                </div>
+            </div>
+            <div class="d-grid gap-2 mt-2">
+
+                <div class="mt-4">
+                    <button id="save-pdf-button" class="btn btn-primary btn-sm float-end me-2 w-100"
+                        ng-click="saveModifiedPDF()">
+                        Save
+                    </button>
+                    <button id="loading-button" class="btn btn-secondary btn-sm float-end me-2" style="display: none"
+                        disabled>
+                        Loading...
+                    </button>
+                    <b class="text-center"><span id="success-message" class="text-center text-success"
+                            style="display: none">
+                            Paper valuation submitted successfully!</span>
+                    </b>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    </div>
+
+    <div class="container-fluid col-xl-12 pdfRight">
+        <div class="row mb-2"></div>
+        <div class="row">
+            <div class="col-12">
+                <div id="pdf-container">
+                    <canvas id="pdf-canvas" pdf-annotation></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="btn-group w-100" role="group">
+                <button id="sidebarCollapse" class="btn btn-primary hstack justify-content-center gap-2">
+                    <i class="fas fa-align-left"></i>
+                    <span class="ms-2 d-none d-md-block">Menu</span>
+                </button>
+                <button class="btn btn-sm btn-outline-primary hstack justify-content-center gap-2"
+                    data-bs-toggle="modal" data-bs-target="#iframeModal">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class=" menu-font-color d-none d-md-block ">Question Paper</span>
+                </button>
+
+                <button id="draw-mode-button" class="btn btn-sm btn-outline-primary hstack justify-content-center gap-2"
+                    ng-click="drawMode()">
+                    <i ng-class="!drawingMode?'fa fa-pencil fa-lg':'fa fa-eye fa-lg'"></i>
+                    <span class=" menu-font-color d-none d-md-block">Annotation</span>
+                </button>
+                <button id="undo-button" class="btn btn-sm btn-outline-primary hstack justify-content-center gap-2"
+                    ng-click="eraser()">
+                    <i ng-class="!deletemode?'fa fa-eraser fa-lg':'fa fa-stop fa-lg'"></i>
+                    <span class="menu-font-color  d-none d-md-block">Erase</span>
+                </button>
+                <button id="previous-page-button"
+                    class="btn btn-sm btn-outline-primary hstack justify-content-center gap-2"
+                    ng-click="previousPage()">
+                    <i class="fa fa-chevron-left fa-lg"></i>
+                    <span class="menu-font-color d-none d-md-block">Previous Page</span>
+                </button>
+                <button class="btn btn-sm btn-outline-primary">
+                    <span class="h5">{{pageNum}}</span>
+                </button>
+                <button id="next-page-button" class="btn btn-sm btn-outline-primary hstack justify-content-center gap-2"
+                    ng-click="nextPage()">
+                    <span class="menu-font-color d-none d-md-block">Next Page</span>
+                    <i class="fa fa-chevron-right fa-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="iframeModal" tabindex="-1" aria-labelledby="iframeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title hdng fs-3" id="iframeModalLabel" style="font-size: 24px!important"> <span style="font-size: 14px;">{{correctionpaperinfo.subject}} </span>| <span class="text-muted" style="font-size: 14px;">{{selected_ques_paper_code}}</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: 80vh;">
+                    <iframe ng-src="{{ correctionpaperinfo.examid+'/' + selected_ques_paper_code + '.pdf#toolbar=0&navpanes=0&scrollbar=0' }}"
+                        style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,280 @@
+<main id="main" class="main">
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card p-4">
+                    <div class="title-2 text-center mb-5">
+                        Preview
+
+                    </div>
+                    <form class="form-group" (ngSubmit)="onSubmit()">
+                        <div class="row g-3 align-items-baseline">
+                            <div class="col-lg-4">
+                                <label for="inputNanme4" class="form-label">Course</label>
+                                <p>{{registered_data[0].course}}</p>
+
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="inputNanme4" class="form-label">Second Language</label>
+                                <p>{{registered_data[0].language}}</p>
+
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label for="inputNanme4" class="form-label">SUC Number</label>
+                                <p>{{registered_data[0].suc}}</p>
+
+
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label for="inputNanme4" class="form-label">Name of the Student
+                                </label>
+                                <p>{{registered_data[0].studentname}}</p>
+
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label for="dob" class="form-label">Date of Birth
+                                </label>
+                                <p>{{registered_data[0].dob}}</p>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label for="gender" class="form-label d-block">Gender</label>
+                                <p>{{registered_data[0].gender}}</p>
+
+                            </div>
+                        </div>
+
+                        <h3 class="hdng2 mt-4">Personal Details</h3>
+                        <div class="row align-items-baseline g-3">
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label">Religion</label>
+                                        <p>{{registered_data[0].religion}}</p>
+
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label">Reservation Category </label>
+                                        <p>{{registered_data[0].reservation}}</p>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label">Physically Challenged </label>
+                                        <p>{{registered_data[0].physicallychallenged}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label">Student Email</label>
+                                        <p>{{registered_data[0].studentemail}}</p>
+
+
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label">Student Mobile Number</label>
+                                        <p>{{registered_data[0].studentmobilenumber}}</p>
+
+
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label">Student Whatsapp Number
+                                        </label>
+                                        <p>{{registered_data[0].studentwhatsappnumber}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label">Student Address</label>
+                                        <p>{{registered_data[0].studentaddress}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="hdng2 mt-4">Student Details</h3>
+                        <div class="row align-items-baseline g-3">
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label">Candidate Aadhaar Number</label>
+                                        <p>{{registered_data[0].studentaadhaarnumber}}</p>
+
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label">Mole -1
+
+                                        </label>
+                                        <p>{{registered_data[0].mole1}}</p>
+
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label">Mole -2
+                                            <!-- <small
+                                    class="d-block">As per
+                                    S.S.C</small> -->
+                                        </label>
+                                        <p>{{registered_data[0].mole2}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label"> Father Name</label>
+                                        <p>{{registered_data[0].fathername}}</p>
+
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label">Father Mobile Number</label>
+                                        <p>{{registered_data[0].fathermobilenumber}}</p>
+
+                                    </div>
+
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> Father Email </label>
+                                        <p>{{registered_data[0].fatheremail}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label"> Mother Name</label>
+                                        <p>{{registered_data[0].mothername}}</p>
+
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> Mother Mobile Number </label>
+
+
+                                        <p>{{registered_data[0].mothermobilenumber}}</p>
+
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> Mother Email
+
+                                        </label>
+                                        <p>{{registered_data[0].motheremail}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="hdng2 col-12 mt-4">SSC Details</h3>
+                        <div class="row align-items-center g-3 ">
+                            <div class="col-lg-3">
+                                <label for="inputNanme4" class="form-label">SSC Board</label>
+                                <p>{{registered_data[0].sscboard}}</p>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="inputNanme4" class="form-label">SSC Hall Ticket
+                                    Number</label>
+                                <p>{{registered_data[0].sschallticketnumber}}</p>
+
+                            </div>
+
+                            <div class="col-lg-3 col-6"><label for="inputNanme4" class="form-label">SSC GPA /
+                                    Percentage</label>
+                                <p>{{registered_data[0].sscgpa}}</p>
+
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <label for="inputNanme4" class="form-label">Year of Pass</label>
+                                <p>{{registered_data[0].sscyearofpass}}</p>
+
+                            </div>
+                        </div>
+                        <h3 class="hdng2 col-12 mt-4">Intermediate Details</h3>
+                        <div class="row align-items-center g-3">
+                            <div class="col-lg-3 col-6">
+                                <label for="inputAddress" class="form-label">Inter Board</label>
+                                <p>{{registered_data[0].interboard}}</p>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <label for="inputAddress" class="form-label">Inter Hall Ticket Number</label>
+                                <p>{{registered_data[0].interhallticketnumber}}</p>
+
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <label for="inputAddress" class="form-label">Inter GPA / Percentage</label>
+                                <p>{{registered_data[0].interpercentage}}</p>
+
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <label for="inputAddress" class="form-label">Year of pass</label>
+                                <p>{{registered_data[0].interyearofpass}}</p>
+
+                            </div>
+                        </div>
+                        <h3 class="hdng2 mt-4">Upload Certificate</h3>
+
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-3 col-6" *ngFor="let x of registered_data[0].certificates">
+                                <label class="form-label">{{x.docType}}</label> <br>
+                                
+                                <div class="hstack gap-1" (click)="preview_certificate(x)"  data-bs-toggle="modal" data-bs-target="#previewmodal">
+                                    <small>View Document</small>
+                                    <i class="bi bi-zoom-in fs-5"></i>
+                                </div>
+ 
+                            </div>
+                        </div>
+                        
+                    
+                    <div class="modal fade" id="previewmodal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5> {{selected_certificate.docType}} </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <span *ngIf="selected_certificate.mimetype=='application/pdf'">
+                                        <!-- <a [href]="sanitizedFileUrl" target="_blank">Open PDF</a> -->
+
+
+                                        <iframe [src]="sanitizedFileUrl" width="100%" height="300px"></iframe>
+                                    </span>
+                                    <span *ngIf="selected_certificate.mimetype!='application/pdf'">
+                                        <a [href]="sanitizedFileUrl" target="_blank" style="text-align: center;">
+                                            <img [src]="sanitizedFileUrl" class="image" height="160" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                        <div class="row mt-4">
+                            <div class="col text-center">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

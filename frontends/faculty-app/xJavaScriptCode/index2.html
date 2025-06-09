@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paper Valuation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    #pdf-container {
+      border: 1px solid #ccc;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    #pdf-canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .btn-group {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row m-1">
+      <div class="col-sm-5">
+        <h6 class="ml-4 mt-2 text-primary">
+          PHYSICS #12345
+          <span class="float-end text-danger"><i class="fa fa-clock"></i> 00:05:02</span>
+        </h6>
+      </div>
+      <div class="col-sm-7">
+        <div class="btn btn-group m-1 p-1 w-100" role="group" id="qno-header">
+          <button class="btn btn-sm btn-primary" disabled style="min-width: 50px">
+            Q.Nos
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="1"
+            id="question-1" style="width: 30px">
+            1
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="2"
+            id="question-2" style="width: 30px">
+            2
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="3"
+            id="question-3" style="width: 30px">
+            3
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="4"
+            id="question-4" style="width: 30px">
+            4
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="5"
+            id="question-5" style="width: 30px">
+            5
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="6"
+            id="question-6" style="width: 30px">
+            6
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="7"
+            id="question-7" style="width: 30px">
+            7
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="8"
+            id="question-8" style="width: 30px">
+            8
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" onclick="selectQuestion(this)" value="9"
+            id="question-9" style="width: 30px">
+            9
+          </button>
+          <button class="btn btn-sm btn-outline-primary diabled" id="question-10" onclick="selectQuestion(this)"
+            value="10" style="width: 30px">
+            10
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="btn-group m-1 p-1 w-100" role="group">
+          <button class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-home fa-lg"></i>
+          </button>
+          <button id="draw-mode-button" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-pencil fa-lg"></i>
+          </button>
+          <button id="undo-button" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-undo fa-lg"></i>
+          </button>
+          <button id="previous-page-button" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-chevron-left fa-lg"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-primary">
+            <span class="h5"> 1</span>
+          </button>
+          <button id="next-page-button" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-chevron-right fa-lg"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+            aria-expanded="false" aria-controls="collapseExample">
+            <i class="fa fa-save fa-lg"></i>
+          </button>
+        </div>
+
+
+        <div class="collapse alert alert-light alert-dismissible fade show m-2 shadow" id="collapseExample">
+          <div class=" ">
+            <h6 class="text-danger ">Pages visited</h6>
+            <button class="btn btn-sm btn-outline-primary mb-2">1</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">2</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">3</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">4</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">5</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">6</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">7</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">8</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">9</button>
+            <button class="btn btn-sm btn-outline-primary mb-2">10</button>
+
+          </div>
+          <hr>
+          <div class="my-2 text-end m-2">
+            <button id="save-pdf-button" class="btn btn-primary btn-sm">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-7">
+        <div class="btn-group m-1 p-1 w-100" role="group" id="marks-input">
+          <button class="btn btn-sm btn-success" disabled style="width: 30px">
+            Marks
+          </button>
+          <button id="marks-1" class="btn btn-sm btn-outline-success" value="1" onclick="addMarks(this)"
+            style="width: 30px">
+            1
+          </button>
+          <button id="marks-2" class="btn btn-sm btn-outline-success" value="2" onclick="addMarks(this)"
+            style="width: 30px">
+            2
+          </button>
+          <button id="marks-3" class="btn btn-sm btn-outline-success" value="3" onclick="addMarks(this)"
+            style="width: 30px">
+            3
+          </button>
+          <button id="marks-4" class="btn btn-sm btn-outline-success" value="4" onclick="addMarks(this)"
+            style="width: 30px">
+            4
+          </button>
+          <button id="marks-5" class="btn btn-sm btn-outline-success" value="5" onclick="addMarks(this)"
+            style="width: 30px">
+            5
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div id="pdf-container">
+          <canvas id="pdf-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const url = "pdfs/1.pdf";
+      let pdfDoc = null;
+      let pageNum = 1;
+      let canvas = document.getElementById("pdf-canvas");
+      let ctx = canvas.getContext("2d");
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+      let drawingMode = false;
+      let annotations = [];
+
+      function resizeCanvas() {
+        const container = document.getElementById("pdf-container");
+        canvas.width = container.clientWidth;
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
+        pdfDoc = pdfDoc_;
+        renderPage(pageNum);
+      });
+
+      function renderPage(num) {
+        pdfDoc.getPage(num).then(function (page) {
+          let viewport = page.getViewport({
+            scale: canvas.width / page.getViewport({ scale: 1 }).width,
+          });
+          canvas.height = viewport.height;
+
+          let renderContext = {
+            canvasContext: ctx,
+            viewport: viewport,
+          };
+
+          page.render(renderContext).promise.then(function () {
+            redrawAnnotations();
+          });
+        });
+      }
+
+      function redrawAnnotations() {
+        pdfDoc.getPage(pageNum).then(function (page) {
+          let viewport = page.getViewport({
+            scale: canvas.width / page.getViewport({ scale: 1 }).width,
+          });
+          let renderContext = {
+            canvasContext: ctx,
+            viewport: viewport,
+          };
+
+          page.render(renderContext).promise.then(function () {
+            annotations.forEach((annotation) => {
+              if (annotation.page === pageNum) {
+                ctx.beginPath();
+                ctx.moveTo(annotation.startX, annotation.startY);
+                ctx.lineTo(annotation.endX, annotation.endY);
+                ctx.strokeStyle = "red";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+              }
+            });
+          });
+        });
+      }
+
+      function drawMode() {
+        drawingMode = !drawingMode;
+        document.getElementById("draw-mode-button").innerText = drawingMode
+          ? "View Mode"
+          : "Draw Mode";
+      }
+
+      function undo() {
+        annotations = annotations.filter((annotation, index, array) => {
+          if (annotation.page === pageNum && index === array.length - 1) {
+            return false;
+          }
+          return true;
+        });
+        renderPage(pageNum);
+      }
+
+      function nextPage() {
+        if (pageNum < pdfDoc.numPages) {
+          pageNum++;
+          renderPage(pageNum);
+        }
+      }
+
+      function previousPage() {
+        if (pageNum > 1) {
+          pageNum--;
+          renderPage(pageNum);
+        }
+      }
+
+      async function savePdf() {
+        const existingPdfBytes = await fetch(url).then((res) =>
+          res.arrayBuffer()
+        );
+        const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+
+        for (let i = 1; i <= pdfDoc.getPageCount(); i++) {
+          const page = pdfDoc.getPage(i - 1);
+          const { width, height } = page.getSize();
+
+          const tempCanvas = document.createElement("canvas");
+          tempCanvas.width = width;
+          tempCanvas.height = height;
+          const tempCtx = tempCanvas.getContext("2d");
+
+          annotations.forEach((annotation) => {
+            if (annotation.page === i) {
+              const startX = (annotation.startX / canvas.width) * width;
+              const startY = (annotation.startY / canvas.height) * height;
+              const endX = (annotation.endX / canvas.width) * width;
+              const endY = (annotation.endY / canvas.height) * height;
+
+              tempCtx.beginPath();
+              tempCtx.moveTo(startX, startY);
+              tempCtx.lineTo(endX, endY);
+              tempCtx.strokeStyle = "red";
+              tempCtx.lineWidth = 3;
+              tempCtx.stroke();
+            }
+          });
+
+          const image = await pdfDoc.embedPng(tempCanvas.toDataURL());
+
+          page.drawImage(image, {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+          });
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: "application/pdf" });
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "annotated.pdf";
+        link.click();
+      }
+
+      // Mouse drawing events
+      canvas.addEventListener("mousedown", (e) => {
+        if (drawingMode) {
+          isDrawing = true;
+          [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+      });
+
+      canvas.addEventListener("mousemove", (e) => {
+        if (!isDrawing) return;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        annotations.push({
+          page: pageNum,
+          startX: lastX,
+          startY: lastY,
+          endX: e.offsetX,
+          endY: e.offsetY,
+        });
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      });
+
+      canvas.addEventListener("mouseup", () => (isDrawing = false));
+      canvas.addEventListener("mouseout", () => (isDrawing = false));
+
+      // Touch drawing events
+      canvas.addEventListener("touchstart", (e) => {
+        if (drawingMode) {
+          isDrawing = true;
+          const touch = e.touches[0];
+          const rect = canvas.getBoundingClientRect();
+          [lastX, lastY] = [
+            touch.clientX - rect.left,
+            touch.clientY - rect.top,
+          ];
+        }
+      });
+
+      canvas.addEventListener("touchmove", (e) => {
+        if (!isDrawing) return;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const [offsetX, offsetY] = [
+          touch.clientX - rect.left,
+          touch.clientY - rect.top,
+        ];
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(offsetX, offsetY);
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        annotations.push({
+          page: pageNum,
+          startX: lastX,
+          startY: lastY,
+          endX: offsetX,
+          endY: offsetY,
+        });
+        [lastX, lastY] = [offsetX, offsetY];
+        e.preventDefault();
+      });
+
+      canvas.addEventListener("touchend", () => (isDrawing = false));
+      canvas.addEventListener("touchcancel", () => (isDrawing = false));
+
+      document
+        .getElementById("draw-mode-button")
+        .addEventListener("click", drawMode);
+      document.getElementById("undo-button").addEventListener("click", undo);
+      document
+        .getElementById("next-page-button")
+        .addEventListener("click", nextPage);
+      document
+        .getElementById("previous-page-button")
+        .addEventListener("click", previousPage);
+      document
+        .getElementById("save-pdf-button")
+        .addEventListener("click", savePdf);
+    });
+
+
+
+    let selectedQuestionValue = "";
+    function selectQuestion(qnoButton) {
+      const qnoHeader = document.getElementById("qno-header");
+
+      const childElements = qnoHeader.children;
+      for (let i = 0; i < childElements.length; i++) {
+        const element = childElements[i];
+        element.classList.remove("active");
+
+      }
+      qnoButton.classList.add("active");
+      // console.log(qnoButton)
+      selectedQuestionValue = qnoButton.value;
+    }
+
+    function addMarks(button) {
+      const qnoHeader = document.getElementById("marks-input");
+
+      const childElements = qnoHeader.children;
+      for (let i = 0; i < childElements.length; i++) {
+        const element = childElements[i];
+        element.classList.remove("active");
+
+      }
+
+      button.classList.add("active");
+
+      let marks = button.value;
+      // console.log(marks);
+      const canvasElements = document.querySelectorAll("canvas"); // Select all canvas elements
+
+      canvasElements.forEach((canvas) => {
+        const context = canvas.getContext("2d");
+
+        canvas.addEventListener("click", function (event) {
+          const rect = canvas.getBoundingClientRect(); // Get bounding rectangle
+          const x = event.clientX - rect.left; // X coordinate relative to canvas
+          const y = event.clientY - rect.top; // Y coordinate relative to canvas
+
+          // Draw circle
+          const radius = 55; // Radius of the circle
+          context.beginPath();
+          context.arc(x, y, radius, 0, Math.PI * 2); // Draw circle
+          context.fillStyle = "transparent"; // Background color of the circle
+          context.fill(); // Fill the circle
+          context.lineWidth = 3; // Border width of the circle
+          context.strokeStyle = "red"; // Border color of the circle
+          context.stroke(); // Draw the border
+
+          // Draw tick mark image
+          /*
+          const img = new Image();
+          img.src = "assets/img/tick.png"; // Image source path
+          img.onload = function () {
+            context.drawImage(img, x, y + 20, 70, 60); // Draw image at clicked position with specified width and height
+          };*/
+
+          // Draw text element for qno
+          const q = `Q: ${selectedQuestionValue}`;
+          context.font = "20px Arial"; // Set font size and type
+          context.fillStyle = "blue"; // Set text color
+          context.fillText(q, x - 20, y - 30); // Draw text at clicked position
+
+          //Line red
+          context.strokeStyle = 'red';
+          context.lineWidth = 3;
+          context.beginPath();
+          context.moveTo(x - 40, y - 20); // Starting point (x, y)
+          context.lineTo(x + 40, y - 20); // Ending point (x, y)
+          context.stroke(); // Render the line
+
+
+          context.font = " 16px Arial";
+          context.fillStyle = "green";
+          context.fillText("Marks", x - 20, y);
+
+
+          // Draw text element for marks
+          const text = `${marks} / 5`;
+
+          context.font = " 28px Arial"; // Set font size and type
+          context.fillStyle = "green"; // Set text color
+          context.clearRect(x - 25, y, 30, 30);
+          context.fillText(text, x - 25, y + 30); // Draw text at clicked position
+        });
+      });
+
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

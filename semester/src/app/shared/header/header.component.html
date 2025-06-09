@@ -1,0 +1,58 @@
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+  <div class="d-flex align-items-center justify-content-between" style="cursor: pointer;">
+    <a class="logo d-flex align-items-center">
+      <div class="text-center align-items-center">
+        <!-- <img src="assets/img/logo.png" alt="" class="d-block d-lg-none"> -->
+        <img (click)="gotohome()" src="assets/img/banner.png" alt="" class=" d-block">
+
+      </div>
+
+    </a>
+
+
+  </div>
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center gap-2">
+
+      <li class="nav-item dropdown pe-3">
+        <a style="height: 50px;width: 50px;" class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+          <img src="https://analysis.aditya.ac.in/uploads/student_photos/{{logininfo.stdPhoto}}"
+          alt="Profile" class="dppic" (error)="img.src = errorimg" #img>
+                    <!-- &nbsp; {{logininfo.stdName}} -->
+          <!-- <img src="{{gmailPhoto}}"  class="rounded-circle"> -->
+
+          <span class="d-none d-md-block dropdown-toggle ps-2"></span>
+        </a><!-- End Profile Iamge Icon -->
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li class="dropdown-header">
+            <h6 class="text-start">{{logininfo.stdName}}</h6>
+            <div class="text-start"><small>{{logininfo.stdEmail}}</small></div>
+            <div class="text-muted text-start text-start  "><small
+                style="font-size: 11px;">{{logininfo.stdMobileNo}}</small></div>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center justify-content-center" href="" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Sign Out</span>
+            </a>
+          </li>
+
+        </ul>
+      </li><!-- End Profile Nav -->
+    </ul>
+  </nav><!-- End Icons Navigation -->
+
+</header>
+<!-- <footer class="footer-menu d-xl-none">
+  
+   <a href="#/student/profile" class="d-flex align-items-center flex-column g-1">
+    <i class="ri-user-line"></i><span>Profile</span>
+  </a> 
+
+</footer> -->

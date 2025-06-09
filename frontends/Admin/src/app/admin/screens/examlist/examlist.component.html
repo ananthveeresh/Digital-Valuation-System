@@ -1,0 +1,75 @@
+<main id="main" class="main">
+    <section class="section dashboard">
+        <div class="card border rounded-3" *ngIf="show_exam_create == 0">
+            <div class="card-body">
+                <div class="row mt-3">
+                    <div class="col-md-10 col-10 text-start">
+                        <h5 class="card-title m-0 p-0"> Exam List </h5>
+                    </div>
+                    <div class="col-md-2 col-2 text-end ">
+                        <button class="btn btn-success btn-sm" (click)="get_examcreate()">Add</button>
+                    </div>
+                </div>
+                <hr style="margin-top: 5px;" />
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <table class="table table-bordered datatable cstm-table vtop">
+                            <thead style="background: #f6f6fe;">
+                                <tr>
+                                    <th scope="col" style="font-weight:600;">#</th>
+                                    <th scope="col" style="font-weight:600;">Exam Id</th>
+                                    <th scope="col" style="font-weight:600;">Description</th>
+                                    <th scope="col" style="font-weight:600;">Scheduled Date</th>
+                                    <th scope="col" style="font-weight:100;" class="text-center  fw-lighter">
+                                        <i class="bi bi-people" title="Strength" style="font-size:19px;color: #fd6220;"></i>
+                                    </th>
+                                    <th scope="col" class="text-center fw-lighter" style="color: #fd6220;">
+                                        <i class="bi bi-building" title="Campus" alt="" width="20"> </i>
+                                    </th>
+                                    <th scope="col" class="text-center fw-lighter" style="color: #fd6220;">
+                                        <i class="bi bi-stack" title="Subject" alt="" width="20"> </i>
+                                    </th>
+                                    <th scope="col" class="text-center fw-lighter" style="color: #fd6220;">
+                                        <i class="bi bi-ui-checks" title="Category" alt="" width="20"> </i>
+                                    </th>
+                                    <th scope="col" class="text-center fw-lighter" style="color: #fd6220;">
+                                        <i class="bi bi-person-square" title="Faculty Map" alt="" width="20"> </i>
+                                    </th>
+                                    <th scope="col" class="text-center fw-lighter" style="color: #fd6220;">
+                                        <i class="bi bi-cloud-arrow-up" title="Upload" style="font-size: 16px;"></i>
+                                    </th>
+                                    <th scope="col" class="text-center"> Edit </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let x of exam_list; let i=index">
+                                    <th scope="row">{{i+1}}</th>
+                                    <td> {{x.examId}} </td>
+                                    <td> {{x.examName}} </td>
+                                    <td>
+                                        <article class="hstack justify-content-between gap-3">
+                                            <div class="text-primary opacity-75 hstack gap-3 timebar">
+                                                <img src="assets/img/calendar.svg" class="timebar-cal"><span> {{x.examDate | date}} </span>
+                                            </div>
+                                        </article>
+                                    </td>
+                                    <td class="text-center" title="Strength"> 100 </td>
+                                    <td class="text-center" title="Campus"> {{x.campusmap.length}} </td>
+                                    <td class="text-center" title="Subject"> {{x.subjectmap.length}} </td>
+                                    <td class="text-center" title="Category"> 3 </td>
+                                    <td class="text-center" title="Faculty Map"> 10 </td>
+                                    <td class="text-center" title="Upload"> <i class="bi bi-upload text-success"> </i> </td>
+                                    <td scope="col" class="text-center fs-6">
+                                        <i class="bi bi-pencil-square text-primary text-center pointer-class" (click)="goto_edit(x)"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

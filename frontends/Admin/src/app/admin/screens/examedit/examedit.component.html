@@ -1,0 +1,164 @@
+<main id="main" class="main">
+  <section class="section dashboard">
+    <div class="card rounded-3">
+      <div class="card-body">
+        <div class="container">
+          
+          <div class="row">
+            <div class="col-md-10 col-10 text-start">
+              <h5 class="card-title">{{exam_info.examName}}<span> ({{exam_info.examId}})</span></h5>
+            </div>
+            <div class="col-md-2 col-2 text-end mt-3">
+                <button class="btn btn-secondary btn-sm" (click)="go_to_back()">Back</button>
+            </div>
+          </div>
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" data-bs-toggle="tab" href="#home" (click)="get_campus_info()">Campus</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#menu1" (click)="get_subject_info()">Subject</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#menu2" (click)="get_upload_info()">Upload Scan Copy</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#menu3">Faculty Report</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#menu4">Result Processing</a>
+            </li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+
+            <div id="home" class="container tab-pane active"><br>
+              <app-campusinfo> </app-campusinfo>
+            </div>
+
+            <div id="menu1" class="container tab-pane fade"><br>
+              <app-subjectinfo> </app-subjectinfo>
+            </div>
+
+            <div id="menu2" class="container tab-pane fade"><br>
+              <app-uploadinfo></app-uploadinfo>
+            </div>
+
+            <div id="menu3" class="container tab-pane fade"><br>
+              <table class="table table-bordered table-sm">
+                <thead class="table-primary">
+                  <tr class="text-center">
+                    <th>S.No</th>
+                    <th>Campus</th>
+                    <th>Faculty Name</th>
+                    <th>Alloted</th>
+                    <th>Validated</th>
+                    <th>Pending</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="text-center">
+                    <th>1</th>
+                    <td class="text-start">ADC KKD</td>
+                    <td class="text-start">Ram</td>
+                    <td>10</td>
+                    <td>8</td>
+                    <td>2</td>
+                  </tr>
+                  <tr class="text-center">
+                    <th>2</th>
+                    <td class="text-start">ADC RJY</td>
+                    <td class="text-start">Suvarna</td>
+                    <td>20</td>
+                    <td>10</td>
+                    <td>10</td> 
+                  </tr>
+                  <tr class="text-center">
+                    <th>3</th>
+                    <td class="text-start">ADC VZM</td>
+                    <td class="text-start">Krishna</td>
+                    <td>15</td>
+                    <td>10</td>
+                    <td>5</td>
+                  </tr>
+                  <tr class="text-center">
+                    <th>4</th>
+                    <td class="text-start">ADCW KKD</td>
+                    <td class="text-start">Rishi</td>
+                    <td>20</td>
+                    <td>20</td>
+                    <td>0</td>
+                  </tr>
+                  <tr class="text-center">
+                    <th>5</th>
+                    <td class="text-start">ADC AMP</td>
+                    <td class="text-start">Gopal</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="menu4" class="container tab-pane fade"><br>
+              <table class="table table-bordered table-sm">
+                <thead class="table-primary">
+                  <tr class="text-center">
+                    <th>S.No</th>
+                    <th>Campus</th>
+                    <th>Papers</th>
+                    <th>Completed</th>
+                    <th>Processing</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="text-center">
+                    <th>1</th>
+                    <td class="text-start">ADC KKD</td>
+                    <td>100</td>
+                    <td>82</td>
+                    <td>18</td>
+                  </tr>
+                  <tr class="text-center">
+                    <th>2</th>
+                    <td class="text-start">ADC KKD</td>
+                    <td>50</td>
+                    <td>40</td>
+                    <td>10</td>
+                  </tr>
+                  <tr class="text-center">
+                    <th>3</th>
+                    <td class="text-start">ADC KKD</td>
+                    <td>20</td>
+                    <td>20</td>
+                    <td>0</td>
+                  </tr>
+                  <tr class="text-center">
+                    <th>4</th>
+                    <td class="text-start">ADC KKD</td>
+                    <td>30</td>
+                    <td>20</td>
+                    <td>10</td>
+                  </tr>
+                  <tr class="text-center">
+                    <th>5</th>
+                    <td class="text-start">ADC KKD</td>
+                    <td>50</td>
+                    <td>45</td>
+                    <td>5</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+</main>

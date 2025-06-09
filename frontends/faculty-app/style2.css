@@ -1,0 +1,208 @@
+html,
+body {
+  height: 95%;
+  margin: 0;
+  overscroll-behavior: none;
+  margin-bottom: 60px;
+}
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #ffffff;
+  text-align: center;
+  padding: 10px 0;
+}
+
+#sidebar {
+  width: 250px;
+  height: 100vh;
+  scrollbar-width: thin;
+  overflow-y: scroll;
+  position: fixed;
+  left: 0px;
+  top: 0;
+  background: #f8f9fa;
+}
+@media (max-width: 1300px) {
+  #sidebar {
+    width: 250px;
+    height: 100vh;
+    scrollbar-width: thin;
+    overflow-y: scroll;
+    position: fixed;
+    left: 0px;
+    top: 0;
+    background: #f8f9fa;
+  }
+}
+
+.text_sm {
+  height: 24px !important;
+  border-radius: 0 !important;
+  font-size: 12px !important;
+  padding: 5px !important;
+}
+
+#sidebar.sidefooter {
+  position: absolute;
+  top: 80px;
+}
+
+#sidebar.active {
+  left: -400px;
+}
+#content {
+  margin-left: 250px;
+  transition: all 0.3s;
+}
+#content.active {
+  margin-left: -400px;
+}
+.separator {
+  margin: 0 5px; /* Adjust as needed */
+}
+
+.qfont {
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: bold;
+  padding: 0px;
+}
+
+.centered-box {
+  height: 100px;
+  border: 2px solid rgb(88, 132, 219);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.TotalScore {
+  background-color: #e9ecef; /* Light gray background */
+  padding-top: 4px;
+  border-radius: 5px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.card-body {
+  background-color: #ffffff;
+  border-radius: 5px;
+}
+
+/* login */
+
+html,
+body {
+  height: 100%;
+}
+
+.form-signin {
+  max-width: 400px;
+  padding: 1rem;
+  min-height: 450px;
+}
+@media (max-width: 600px) {
+  .form-signin {
+    width: 100% !important;
+    padding: 15px !important;
+    margin: 15px !important;
+  }
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+}
+.logoSignin {
+  height: 80px;
+  margin-bottom: 48px !important;
+}
+
+.marks_Style {
+  font-weight: 500;
+  font-size: 18px;
+}
+.subleft {
+  font-size: 16px;
+  white-space: pre-line;
+  width: 118px;
+  display: block;
+  word-wrap: break-word;
+  word-break: break-all;
+  margin-top: -29px;
+  color: #012970;
+  margin-bottom: 2px;
+}
+
+.sectionPart {
+  font-size: 12px;
+  font-weight: 500;
+  background: #0d6efd05;
+  padding: 4px 8px;
+  color: #031d42;
+  border-radius: 4px;
+  border: 1px #cfd7e3 solid;
+  font-size: 13px;
+  font-weight: 500;
+}
+.TotalWarper {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 15px;
+}
+.small {
+  font-size: 11px;
+}
+
+.hdng {
+  color: #031d42 !important;
+  font-size: 13px !important;
+}
+.pagesvisited .btn-outline-primary {
+  border: 1px #007bff21 solid !important;
+  color: #031d42;
+  font-weight: 500 !important;
+}
+.pagesvisited .btn {
+  font-size: 12px !important;
+}
+@media (min-width: 767px) {
+  .pdfRight {
+    padding-left: 270px;
+  }
+}
+.stable td,
+.stable th {
+  background: #feefe77a !important;
+}
+
+.menu-font-color {
+  color: #031d42 !important;
+  font-weight: 500;
+}
+.btn:hover .menu-font-color {
+  color: white !important;
+}
+.options {
+  font-size: 11px;
+  white-space: nowrap;
+  min-width: 33px;
+}
+.choice_marks{
+  background-color: #0080004d;
+}
+.choice_marks_default{
+  background-color: #d3d4d5;
+}

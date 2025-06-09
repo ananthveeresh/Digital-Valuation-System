@@ -1,0 +1,163 @@
+<main id="main" class="main">
+    <section class="section dashboard">
+      <div class="row">
+        <div class="card">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Create Exam</h5>
+            <div class="col-md-0">
+              <button class="btn btn-primary btn-sm" (click)="Goto_sublist()">List</button>
+            </div>
+          </div>
+        
+          <div class="card-body">
+            <div class="row">
+              <div class="d-flex gap-3 pt-3">
+                <input 
+                  type="number" 
+                  placeholder="Enter Exam Id" 
+                  class="form-control" 
+                  name="exam_id" 
+                  [(ngModel)]="exam_id">
+                  <button 
+                  class="btn btn-primary" 
+                  [disabled]="exam_id == null || exam_id == undefined" 
+                  (click)="SubmitExam()">
+                  Go
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="SubjectData.length > 0">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white text-white text-start">
+              <h5 class="card-title mb-0">Select Campus</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div *ngFor="let x of Campus; let i = index" class="form-check d-flex align-items-center mb-2">
+                      <input 
+                        class="form-check-input me-2" 
+                        type="checkbox" 
+                        id="campus-{{ i }}" 
+                        name="selected_sub" 
+                        [(ngModel)]="selected_sub[i]" />
+                      <label class="form-check-label" style="font-size: xx-small;" for="campus-{{ i }}">
+                        {{ x.campus_name }}
+                      </label>
+                    </div>
+          
+                    <button  class="btn btn-warning btn-sm ms-3 d-flex align-items-center gap-1"  (click)="GetSub()" 
+          >
+          <i class="bi bi-arrow-right-circle"></i> 
+          Proceed to Next
+        </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+        <div class="row" *ngIf="ShowData ==1 && check_Proceed == true">
+            <div class="container mt-4">
+           <div class="card">
+             <div class="card-body p-5 bg-light">
+               <table class="table table-striped table-hover" >
+                 <thead>
+                   <tr>
+                     <th>S.No</th>
+                     <th>Semister</th>
+                     <th>Subject</th>
+                     <th class="text-center">SubjectCode</th>
+                     <th class="text-center">PaperCode</th>
+                     <th>Select Valuer</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let x of SubjectData; let i = index">
+                     <td>{{i + 1}}</td>
+                     <td>Sem -{{x.semister}}</td>
+                     <td>{{x.subjectName}}</td>
+                     <td style="text-align: left;"><input type="text" name="subjectcode" [(ngModel)]="x.subjectcode"  class="form-control w-75 mx-auto rounded-pill" placeholder="Enter SubjectCode" /></td>
+                     <td style="text-align: left;"><input type="number" name="papercode" [(ngModel)]="x.papercode"  class="form-control w-75 mx-auto rounded-pill" placeholder="Enter PaperCode" /></td>
+                     <td (click)="ViewModal(x,i)">
+                       <span class="text-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered"><i class="bi bi-pin-map-fill"></i></span>
+                     </td>
+                   </tr>
+                 </tbody>
+                 </table>
+                 <div class="text-center">
+                   <button class="btn btn-primary" (click)="SubmitData()">Submit</button>
+                 </div>
+             </div>
+           </div>
+        </div>
+           <div class="modal fade" id="verticalycentered" tabindex="-1" aria-hidden="true" style="display: none;">
+             <div class="modal-dialog modal-dialog-centered modal-lg">
+               <div class="modal-content">
+                <div class="modal-header bg-light border-bottom-0">
+                  
+                    <span class="me-2 small"><b>Faculty Mapping</b></span>
+                 <div class="col-md-6 mx-2">
+                  <select class="form-select" aria-label="Default select example"  [(ngModel)]="selectedBranch" (change)="getFaculity()">
+                    <option value="" selected>Select Campus</option>
+                    <ng-container *ngIf="selectedCampuses.length > 0; else noCampusesTemplate">
+                      <option value="{{x.campus_name}}" *ngFor="let x of selectedCampuses">{{x.campus_name}}</option>
+                    </ng-container>
+                      <ng-template #noCampusesTemplate>
+                        <option value="{{x.campus_name}}" *ngFor="let x of Campus">{{x.campus_name}}</option>
+                      </ng-template>
+                  </select>
+                 </div>
+                   
+                   
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                  <div class="row mt-2" *ngIf="FaculityName.length > 0">
+                    <div class="col-md-12">
+                      <table class="table table-striped table-bordered">
+                        <thead>
+                          <tr>
+                            <th>S.No</th>
+                            <th>Subject</th>
+                            <th>PayCode</th>
+                            <th>Faculty Name</th>
+                            <th>Checkbox</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let x of FaculityName; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ x.subject }}</td>
+                            <td>{{x.paycode}}</td>
+                            <td>{{ x.facultyName }}</td>
+                            <td (click)="insrFac(x, i)">
+                              <input type="checkbox" [(ngModel)]="x.checked_status">
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="alert alert-danger" role="alert" *ngIf="FaculityName.length ==0">
+                  No Data Found
+                  </div>
+                </div>
+                
+                 <div class="modal-footer">
+                   <button type="button" (click)="insertCampus(modelindex)" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+                 </div>
+               </div>
+             </div>
+           </div><!-- End Vertically centered Modal-->
+        </div>
+      </div>
+  
+    </section>
+  </main>

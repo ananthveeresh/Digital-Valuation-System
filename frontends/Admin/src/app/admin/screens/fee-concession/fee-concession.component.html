@@ -1,0 +1,145 @@
+<main id="main" class="main">
+    <section class="section">
+      <div class="col-md-12" >
+        <div class="card" *ngIf="Previous_Student_Data.length > 0">
+             <div class="d-flex justify-content-between px-2 py-2">
+                <div class="col-md-11">
+                  <h5 class="card-title">Previous Data</h5>
+                </div>
+                <div class="col-md-0 mt-2">
+                    <button class="btn btn-primary btn-sm" (click)="Back_To_Reg()">Back</button>
+                </div>
+              </div>
+               
+            <div class="card-body mt-2">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Semester</th>
+                            <th>Suc</th>
+                            <th>Reason</th>
+                            <th>Author</th>
+                            <th>View File</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of Previous_Student_Data">
+                            <td>{{x.examinfo[0].examId}}</td>
+                            <td>{{x.suc}}</td>
+                            <td>{{x.permissionreason}}</td>
+                            <td>{{x.authorizedby}}</td>
+                            <td> 
+                                <ng-container *ngFor="let y of x.filepath">
+                                    <a 
+                                    [href]="y.fileurl?.changingThisBreaksApplicationSecurity || y.fileurl" 
+                                    target="_blank" 
+                                    class="text-decoration-none text-danger">
+                                    <i class="bi bi-cloud-arrow-down me-1 fs-5"></i>{{ x?.docType }}
+                                  </a>
+                                </ng-container>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div class="col-md-11">
+                  <h5 class="card-title">Student Fee Permission</h5>
+                </div>
+                <div class="col-md-0 mt-2" *ngIf="Previous_Student_Data.length == 0">
+                    <button class="btn btn-primary btn-sm" (click)="Back_To_Reg()">Back</button>
+                </div>
+              </div>
+               
+                <form class="row g-2" [formGroup]="Concession" (ngSubmit)="Submit()">
+                    <div class="col-12">
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label"><b>Semester</b></label>
+                            <div class="col-sm-10asa">
+                              <select class="form-select" aria-label="Default select example" formControlName="examId">
+                                <option selected="">Select Semester</option>
+                                <option value="{{x.examId}}" *ngFor="let x of semdetials">{{x.examName}}</option>
+                              </select>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="inputEmail4" class="form-label"><b>Suc</b></label>
+                        <input  type="number" [value]="StdInfo?.[0]?.student_no || ''" placeholder="Enter Suc" class="form-control" readonly />
+                    </div>
+                  <div class="col-12">
+                    <div class="row mb-0">
+                        <label for="inputPassword" class="col-sm-2 col-form-label"><b>Comment</b></label>
+                        <div class="col-sm-10asa">
+                          <textarea class="form-control" style="height: 100px" formControlName="comment"></textarea>
+                        </div>
+                      </div>
+                  </div>
+                  
+                  <div class="col-12">
+                    <label for="inputEmail4" class="form-label"><b>Authorized</b></label>
+                    <input type="text" placeholder="Enter Authorized Name" class="form-control" formControlName="authorized" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label"> <sup class="text-danger"> * </sup> <b>Upload File</b></label>
+                    <div class="hstack gap-1">
+                        <input class="form-control" type="file"
+                            (change)="onFileSelected($event)" formControlName="file"  required/>
+                        <button type="button"  (click)="uploadPhoto()" class="btn btn-primary btn-sm">Upload</button>
+                    </div>
+                    <!-- <div class="hstack gap-1"
+                        (click)="certificate_view()" data-bs-toggle="modal"
+                        data-bs-target="#previewmodal">
+                        <small class="text-success">View Document</small>
+                        <i class="bi bi-zoom-in fs-5"></i>
+                    </div> -->
+                  </div>
+                  <div class="col">
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary" [disabled]="Concession.invalid">Submit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- <div class="modal fade" id="previewmodal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="selected_certificate.length>0" class="text-center text-success">
+                    {{selected_certificate[0].docType}} </h5>                               
+            </div>
+            <div class="modal-body" *ngIf="selected_certificate.length==0">
+                <h5 class="text-center text-danger"> No Data Found </h5>
+            </div>
+            <div class="modal-body" *ngIf="selected_certificate.length>0">
+                <span *ngIf="selected_certificate[0].mimetype=='application/pdf'">
+                    <iframe [src]="selected_certificate[0].fileurl" width="100%"
+                        height="300px"></iframe>
+                </span>
+                <span *ngIf="selected_certificate[0].mimetype!='application/pdf'">
+                    <a [href]="selected_certificate[0].fileurl" target="_blank"
+                        style="text-align: center;">
+                        <img [src]="selected_certificate[0].fileurl" class="image" height="160" />
+                    </a>
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                    data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> -->

@@ -1,0 +1,505 @@
+<main id="main" class="main">
+  <section class="section">
+    <div class="row">
+      <div class="col-xl-3">
+
+        <div class="card">
+          <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+            <img src="https://analysis.aditya.ac.in/uploads/student_photos/{{logininfo.stdPhoto}}" alt="Profile"
+              class="rounded p-1 border" (error)="img.src = errorimg" #img style="height: auto;width: 100px;">
+
+            <div class="card-title fs-6 p-0 m-0">{{profile_data?.studentname}}</div>
+            <div class="vstack row-gap-2 mt-3">
+              <ul class="list-unstyled">
+                <li class="sticker">SUC Number</li>
+                <li class="sticker_content">{{profile_data?.suc}}</li>
+              </ul>
+              <ul class="list-unstyled">
+                <li class="sticker">Mobile Number</li>
+                <li class="sticker_content">{{profile_data?.studentmobilenumber}}</li>
+              </ul>
+              <ul class="list-unstyled">
+                <li class="sticker">Course</li>
+                <li class="sticker_content">{{profile_data?.course[0].full_course_name}}</li>
+              </ul>
+              <ul class="list-unstyled">
+                <li class="sticker">Date of Birth</li>
+                <li class="sticker_content">{{profile_data?.dob}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-xl-9">
+
+        <div class="card">
+
+          <div class="card-body pt-3">
+            <!-- Bordered Tabs -->
+            <ul class="nav nav-tabs nav-tabs-bordered" role="tablist">
+
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1" role="tab" (click)="get_tab_name('tab1')">Exam</button>
+              </li>
+
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2" tabindex="-1"
+                  role="tab" (click)="get_tab_name('tab2')">Personal details</button>
+              </li>
+
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab3" tabindex="-1"
+                  role="tab" (click)="get_tab_name('tab3')">Education Details</button>
+              </li>
+
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab4" tabindex="-1"
+                  role="tab" (click)="get_tab_name('tab4')">Documents</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button [ngClass]="active_tab_name == 'tab6' ? 'active' : ''" class="nav-link text-success" data-bs-toggle="tab" data-bs-target="#tab6" tabindex="-1" role="tab" (click)="get_tab_name('tab6')">Hall Tickets</button>
+              </li>
+              <li class="nav-item" role="presentation" *ngIf="result_details.length > 0">
+                <button class="nav-link text-danger" data-bs-toggle="tab" data-bs-target="#tab5" tabindex="-1" role="tab" (click)="get_tab_name('tab5')">Result</button>
+              </li>
+            </ul>
+            <div class="tab-content">
+
+              <div class="tab-pane fade show active profile-overview" id="tab1" role="tabpanel">
+                <div class="p-2">
+                  <div class="row" *ngIf="payment_history.length>0">
+                    <div class="col-md-6">
+                      <h5 class="card-title"> Payment History</h5>
+                    </div>
+                    <div class="col-md-12">
+                      <table class="table table-bordered" style="background: transparent;">
+                        <thead class="text-center hdng2">
+                          <tr>
+                            <td class="text-center">S.no</td>
+                            <td> Payment Date </td>
+                            <td> Fee Name </td>
+                            <td> Fee Paid </td>
+                            <td> Reciept No </td>
+                            <td> Hall Ticket</td>
+                          </tr>
+                        </thead>
+                        <tbody class="text-center">
+                          <tr *ngFor="let x of payment_history; let i=index">
+                            <td class="text-center"> {{i+1}} </td>
+                            <td> {{x.payment_date | date: 'dd-MM-yyyy'}} </td>
+                            <td> {{x.fee_name}} </td>
+                            <td> {{x.feepaid}} </td>
+                            <td> {{x.receipt_no}} </td>
+                            <td>
+                              <ng-container *ngIf="CheckPercent > 65;else templateName">
+                                <a class="link-opacity-10-hover text-danger" href="javascript:void(0)"></a> &nbsp;<i
+                                  style="cursor: pointer;" (click)="getHallTicket()"
+                                  class="bi bi-filetype-pdf fs-4 text-danger"></i>
+                              </ng-container>
+                              <ng-template #templateName>
+                                <span>Contact To Principal </span>
+                              </ng-template>
+                              <!-- <span>Contact To Principal </span> -->
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="exam_fee_info.length>0">
+                    <!-- <div class="row"> -->
+                    <div class="col-md-6">
+                      <h5 class="card-title"> Confirm Payment </h5>
+                    </div>
+                    <div class="col-md-12">
+                      <form novalidate="" class="ng-untouched ng-pristine ng-invalid">
+                        <div class="row">
+                          <div class="col-md-5">
+                            <div class="card mb-4 rounded-3 shadow-sm">
+                              <div class="card-header py-3">
+                                <h5 class="my-0 fw-normal">{{exam_fee_info[0]?.fee_name || 'Exam Fee'}}</h5>
+                              </div>
+                              <div class="card-body">
+                                <h1 class="display-6 fs-3 mt-3">{{exam_fee_info[0]?.term_due_amount}}/-</h1>
+                                <!-- <ul class="list-unstyled mt-3 mb-4">
+                                                <li>20 users included</li>
+                                                <li>10 GB of storage</li>
+                                                <li>Priority email support</li>
+                                                <li>Help center access</li>
+                                              </ul> -->
+                                <img class="w-100 mb-3" style="margin-top: -7px;"
+                                  src="assets/img/payment_methods.jpg" />
+                                <button *ngIf="!showDangerAlert" type="button" class="w-100 btn  btn-primary"
+                                  (click)="navigateTopayment()">Pay
+                                  Now</button>
+
+                                <div *ngIf="showDangerAlert" class="alert alert-danger" role="alert"
+                                  style="font-size: 20px">
+                                  <i class="bi bi-exclamation-triangle danger-class"></i> &nbsp; Please clear all
+                                  outstanding fees ( ₹{{fees_info.feedue | number}} ) before proceeding to pay the exam
+                                  fee.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade profile-edit pt-3" id="tab2" role="tabpanel">
+                <h5 class="card-title pb-2">Personal Details</h5>
+                <div class="row">
+                  <div class="col-md-4">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="sticker">Religion</li>
+                        <li class="sticker_content">{{profile_data?.religion}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Reservation Category</li>
+                        <li class="sticker_content">{{profile_data?.reservation}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Physically Challenged</li>
+                        <li class="sticker_content">{{profile_data?.physicallychallenged}}</li>
+                      </ul>
+
+                    </article>
+                  </div>
+                  <div class="col-md-4">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="sticker">Student Email id</li>
+                        <li class="sticker_content">{{profile_data?.studentemail}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Student Phone Number</li>
+                        <li class="sticker_content">{{profile_data?.studentmobilenumber}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Student Whatsapp Number</li>
+                        <li class="sticker_content">{{profile_data?.studentwhatsappnumber}}</li>
+                      </ul>
+
+                    </article>
+                  </div>
+                  <div class="col-md-4">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="sticker">Address</li>
+                        <li class="sticker_content">
+                          {{profile_data?.studentaddress}}
+
+                        </li>
+                      </ul>
+
+                    </article>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="sticker">Candidate Aadhaar Number</li>
+                        <li class="sticker_content">{{profile_data?.studentaadhaarnumber}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Mole -1</li>
+                        <li class="sticker_content">{{profile_data?.mole1}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Mole -2</li>
+                        <li class="sticker_content">{{profile_data?.mole2}}</li>
+                      </ul>
+
+                    </article>
+                  </div>
+                  <div class="col-md-4">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="sticker">Father Name</li>
+                        <li class="sticker_content">{{profile_data?.fathername}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Father Mobile Number</li>
+                        <li class="sticker_content">{{profile_data?.fathermobilenumber}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Father Email id</li>
+                        <li class="sticker_content">{{profile_data?.fatheremail}}</li>
+                      </ul>
+
+                    </article>
+                  </div>
+                  <div class="col-md-4">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="sticker">Mother Name</li>
+                        <li class="sticker_content">{{profile_data?.mothername}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Mother Mobile Number</li>
+                        <li class="sticker_content">{{profile_data?.mothermobilenumber}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Mother Email id</li>
+                        <li class="sticker_content">{{profile_data?.motheremail}}</li>
+                      </ul>
+
+                    </article>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="tab-pane fade pt-3" id="tab3" role="tabpanel">
+
+                <h5 class="card-title pb-2">Education Details</h5>
+                <div class="row">
+                  <div class="col-md-6">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="sticker">SSC Board Name</li>
+                        <li class="sticker_content">{{profile_data?.sscboard}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">SSC Hall Ticket Number</li>
+                        <li class="sticker_content">{{profile_data?.sschallticketnumber}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">SSC GPA / Percentage</li>
+                        <li class="sticker_content">{{profile_data?.sscgpa}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Year of Pass(SSC)</li>
+                        <li class="sticker_content">{{profile_data?.sscyearofpass}}</li>
+                      </ul>
+
+                    </article>
+                  </div>
+                  <div class="col-md-6">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="sticker">Inter Board Name</li>
+                        <li class="sticker_content">{{profile_data?.interboard}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Inter Hall Ticket Number</li>
+                        <li class="sticker_content">{{profile_data?.interhallticketnumber}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Inter GPA / Percentage</li>
+                        <li class="sticker_content">{{profile_data?.interpercentage}}</li>
+                      </ul>
+                      <ul class="list-unstyled">
+                        <li class="sticker">Year of pass(INTER)</li>
+                        <li class="sticker_content">{{profile_data?.interyearofpass}}</li>
+                      </ul>
+
+                    </article>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="tab-pane fade pt-3" id="tab4" role="tabpanel">
+                <div class="row">
+
+                  <div class="col-md-12">
+                    <article class="vstack mt-3">
+                      <ul class="list-unstyled">
+                        <li class="card-title fs-6 m-0 p-0">Download / View Documents</li>
+                        <li class="sticker_content vstack gap-2 mt-2" *ngFor="let x of profile_data?.certificates">
+                          <a [href]="x.fileurl?.changingThisBreaksApplicationSecurity || x.fileurl" target="_blank">
+                            <i class="bi bi-cloud-arrow-down me-1"></i>{{x.docType}}
+                          </a>
+                        </li>
+                      </ul>
+                    </article>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="tab-pane fade pt-3 " id="tab5" role="tabpanel">
+                <h5 class="card-title pb-2 p-0">Result </h5>
+                <div class="row ">
+                  <div class="col-md-4">
+                    <select class="form-control form-select" [(ngModel)]="exam_result">
+                      <option value="">Select Exam</option>
+                      <option [ngValue]="x" *ngFor="let x of result_details"> {{x.examinfo.split(',')[1]}} </option>
+                    </select>
+                  </div>
+                  <div class="col-1">
+                    <button class="btn btn-primary btn-sm" [disabled]="!exam_result"
+                      (click)="get_examresult()">Submit</button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="tab-pane fade pt-3 " id="tab6" role="tabpanel">
+                <h5 class="card-title pb-2 p-0">Hall Ticket </h5>
+                <div class="row ">
+                  <div class="col-md-4">
+                    <select class="form-control form-select" [(ngModel)]="selected_exam_id">
+                      <option value="">Select Exam</option>
+                      <option [ngValue]="x.examId" *ngFor="let x of exams_list"> {{x.examName}} </option>
+                    </select>
+                  </div>
+                  <div class="col-md-2" *ngIf="checknewsempayment.length>0">
+                    <button class="btn btn-primary btn-sm" [disabled]="!selected_exam_id"
+                      (click)="get_examhallticket()">Submit</button>
+                  </div>
+                  <div class="col-md-5" *ngIf="checknewsempayment.length==0">
+                    <span class="text-danger" style="font-size: 20px;">* Exam fee not paid</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row result_class" *ngIf="active_tab_name == 'tab5'">
+          <div class="col-md-12" *ngIf="selected_result">
+
+            <div class="container-fluid   card card-body" id="printableArea" style="padding: 15px 30px;">
+              <div class=" d-flex justify-content-end align-items-center  flex-wrap">
+                <button class="btn btn-secondary btn-sm d-print-none" (click)="print_result()">
+                  <i class="bi bi-printer-fill"></i> Print
+                </button>
+
+              </div>
+              <div class="grade-sheet">
+
+                <div class="d-flex justify-content-center align-items-center text-center">
+                  <div class="logo me-4">
+                    <img src="assets/img/adc_logo.png" alt="Aditya Logo"
+                      style="width: 100%; height: 100%; border-radius: 50%;">
+                  </div>
+                  <div>
+                    <h1 class="college-name fw-bold">{{std_clg_info[0]?.tccollegename}}</h1>
+                    <h4 class="college-details fw-bold">{{std_clg_info[0]?.tcotherinfo.split('\n')[0]}}</h4>
+                    <h4 class="college-details fw-bold">{{std_clg_info[0]?.tcotherinfo.split('\n')[01]}} </h4>
+                  </div>
+                </div>
+
+                <div class="grade-title">
+                  <button>GRADE SHEET</button>
+                </div>
+                <div class="text-center fw-bold">
+                  <h3 class="exam-details">{{selected_result?.examinfo.split(',')[0]}}</h3>
+                  <h3 class="exam-details">{{selected_result?.examinfo.split(',')[1]}}</h3>
+                  <h3 class="exam-details">{{selected_result?.examinfo.split(',')[2]}}</h3>
+                </div>
+                <div class="text-end  mt-4">
+                  <p class="m-0 p-0"> REGISTER NO:<span class="fw-bold ms-2">{{selected_result?.hallticket}}</span></p>
+                </div>
+                <div class="student-details">
+
+                  <p class="m-0 p-0"> NAME OF THE CANDIDATE : <span
+                      class="fw-bold">{{selected_result?.studentname}}</span></p>
+                </div>
+
+                <div>THE FOLLOWING GRADES WERE SECURED BY THE CANDIDATE:</div>
+
+                <table>
+                  <thead style="border-bottom: 2px solid #000000a8;">
+                    <tr>
+                      <th>SUBJECTS</th>
+                      <th>CREDITS</th>
+                      <th>GRADE</th>
+                      <th>POINTS</th>
+                      <th>GRADE <br>POINT</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of selected_result?.marks ">
+                      <td class="text-start fw-bold">{{x.subject}}</td>
+                      <td>{{x.credit}}</td>
+                      <td>{{x.grade || '-'}}</td>
+                      <td>{{x.points || '-'}}</td>
+                      <td>{{x.gradepoints || '-'}}</td>
+                    </tr>
+                    <tr style="border-top: 1px dashed rgba(128, 128, 128, 0.651)">
+                      <td class="text-start fw-bold">
+                        <div> TOTAL </div>
+                      </td>
+
+                      <td class="text-center ms-4" width="22%">
+                        <strong>{{total_credit_points}}</strong>
+                      </td>
+                      <td colspan="2"> &nbsp; </td>
+                      <td class="text-center"><strong>{{total_grade_points}}</strong></td>
+                    </tr>
+                    <tr aria-colspan="6" style="border-top: 1px dashed rgba(128, 128, 128, 0.651);text-align: end;">
+                      <td colspan="6" class="text-end fw-bold w-100">
+                        <div class="me-2 mt-1 mb-1">SGPA:
+                          <strong>{{selected_result?.sgpa}}</strong>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <table style="font-size: 13px;">
+                  <tr class="fw-bold">
+                    <td>RANGE OF MARKS (%):</td>
+                    <td>>= 90</td>
+                    <td>80 - 89.99</td>
+                    <td>70 - 79.99</td>
+                    <td>60 - 69.99</td>
+                    <td>55 - 59.99</td>
+                    <td>50 - 54.99</td>
+                    <td>40 - 49.99</td>
+                    <td> &lt;40 </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">GRADE:</td>
+                    <td *ngFor="let x of total_grading">{{x.grade}}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">POINTS:</td>
+                    <td *ngFor="let x of total_grading">{{x.points}}</td>
+                  </tr>
+                </table>
+
+
+                <footer class="mt-5 pt-3 mt-auto mb-4">
+                  <div class="signature ">
+                    <div class="left-sign " style="padding-top: 5px;">
+                      <div><strong>{{std_clg_info[0]?.school_city}}</strong></div>
+                      <div *ngIf="this.logininfo.stdInst == 5"> 
+                        <strong *ngIf="profile_data.studentinfo[0].campus_id != 44" > 01-04-2025 </strong>
+                        <strong *ngIf="profile_data.studentinfo[0].campus_id == 44" > 05-05-2025 </strong>
+                      </div>
+                      <div *ngIf="this.logininfo.stdInst != 5"> <strong> {{ report_date | date: 'dd-MM-yyyy' }} </strong></div>
+                    </div>
+                    <div class="right-sign">
+                      <div class="sign-image"> <img
+                          src="https://analysis.aditya.ac.in/uploads/principal_signature/{{profile_data.studentinfo[0].campus_id}}_1.jpg" alt="">
+                      </div>
+                      <div class="sign-text">CONTROLLER OF EXAMINATIONS</div>
+                    </div>
+                  </div>
+                </footer>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <app-downloadhallticket *ngIf="hallticket == 1"  [examid]=selected_exam_id></app-downloadhallticket>
+      </div>
+    </div>
+  </section>
+</main>

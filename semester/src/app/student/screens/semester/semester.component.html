@@ -1,0 +1,41 @@
+<main id="main" class="main">
+  <section class="section dashboard">
+    <div class="row dashboard ">
+
+      <div class="col-12" *ngIf="total_exams_list.length==0">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="text-center text-danger m-4"> No Data Found </h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 sales-card" *ngFor="let x of total_exams_list; let i=index">
+        <div class="card p-4">
+          <div class="hstack gap-3 justify-content-between">
+            <article class="hstack gap-3">
+
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-person"></i>
+              </div>
+              <div class="title-2">
+                {{x.examName}}
+                <small class="d-block mt-n1">{{x.fromDate | date:'dd/MM/yyyy'}} - {{x.endDate |
+                  date:'dd/MM/yyyy'}}</small>
+              </div>
+            </article>
+            <div> <button class="btn btn-primary btn-sm hstack gap-1" 
+                (click)="navigateToRegistration()">
+                Registration for Exam Application
+                <i class="bi bi-chevron-right"></i>
+              </button></div>
+          </div>
+        </div>
+
+        
+      </div>
+
+    </div>
+
+  </section>
+ 
+</main>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="paperApp">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paper Valuation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+    #pdf-container {
+      border: 1px solid #ccc;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    #pdf-canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .btn-group {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body ng-controller="PaperController">
+  <div class="container">
+    <div class="row m-1">
+      <div class="col-sm-5">
+        <h6 class="ml-4 mt-2 text-primary">
+          PHYSICS #12345
+          <span class="float-end text-danger"><i class="fa fa-clock"></i> 00:05:02</span>
+        </h6>
+      </div>
+      <div class="col-sm-7">
+        <div class="btn btn-group m-1 p-1 w-100" role="group" id="qno-header">
+          <button class="btn btn-sm btn-primary" disabled style="min-width: 50px">
+            Q.Nos
+          </button>
+          <button ng-repeat="q in questions" class="btn btn-sm" ng-class="{'btn-outline-primary': q != selectedQuestion, 'btn-primary': q == selectedQuestion}" ng-click="selectQuestion(q)" ng-value="q" style="width: 30px">
+            {{q}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="btn-group m-1 p-1 w-100" role="group">
+          <button class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-home fa-lg"></i>
+          </button>
+          <button id="draw-mode-button" class="btn btn-sm btn-outline-primary" ng-click="toggleDrawMode()">
+            <i class="fa fa-pencil fa-lg"></i>
+          </button>
+          <button id="undo-button" class="btn btn-sm btn-outline-primary" ng-click="undo()">
+            <i class="fa fa-undo fa-lg"></i>
+          </button>
+          <button id="previous-page-button" class="btn btn-sm btn-outline-primary" ng-click="previousPage()">
+            <i class="fa fa-chevron-left fa-lg"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-primary">
+            <span class="h5">{{pageNum}}</span>
+          </button>
+          <button id="next-page-button" class="btn btn-sm btn-outline-primary" ng-click="nextPage()">
+            <i class="fa fa-chevron-right fa-lg"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+            aria-expanded="false" aria-controls="collapseExample">
+            <i class="fa fa-save fa-lg"></i>
+          </button>
+        </div>
+
+        <div class="collapse alert alert-light alert-dismissible fade show m-2 shadow" id="collapseExample">
+          <div>
+            <h6 class="text-danger">Pages visited</h6>
+            <button class="btn btn-sm btn-outline-primary mb-2" ng-repeat="page in visitedPages">{{page}}</button>
+          </div>
+          <hr>
+          <div class="my-2 text-end m-2">
+            <button id="save-pdf-button" class="btn btn-primary btn-sm" ng-click="savePdf()">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-7">
+        <div class="btn-group m-1 p-1 w-100" role="group" id="marks-input">
+          <button class="btn btn-sm btn-success" disabled style="width: 30px">
+            Marks
+          </button>
+          <button ng-repeat="mark in marks" id="marks-{{mark}}" class="btn btn-sm btn-outline-success" ng-click="addMarks(mark)" ng-value="mark" style="width: 30px">
+            {{mark}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div id="pdf-container">
+          <canvas id="pdf-canvas" ng-mousedown="startDrawing($event)" ng-mousemove="draw($event)" ng-mouseup="stopDrawing()" ng-mouseout="stopDrawing()" ng-touchstart="startDrawing($event)" ng-touchmove="draw($event)" ng-touchend="stopDrawing()" ng-touchcancel="stopDrawing()"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    angular.module('paperApp', [])
+      .controller('PaperController', function ($scope) {
+        $scope.questions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $scope.selectedQuestion = '';
+        $scope.marks = [1, 2, 3, 4, 5];
+        $scope.annotations = [];
+        $scope.pageNum = 1;
+        $scope.visitedPages = [];
+        $scope.drawingMode = false;
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        $scope.selectQuestion = function (q) {
+          $scope.selectedQuestion = q;
+        };
+
+        $scope.addMarks = function (mark) {
+          // console.log('Mark added:', mark);
+        };
+
+        $scope.toggleDrawMode = function () {
+          $scope.drawingMode = !$scope.drawingMode;
+        };
+
+        $scope.undo = function () {
+          $scope.annotations.pop();
+          $scope.renderPage($scope.pageNum);
+        };
+
+        $scope.nextPage = function () {
+          if ($scope.pageNum < $scope.pdfDoc.numPages) {
+            $scope.pageNum++;
+            $scope.renderPage($scope.pageNum);
+          }
+        };
+
+        $scope.previousPage = function () {
+          if ($scope.pageNum > 1) {
+            $scope.pageNum--;
+            $scope.renderPage($scope.pageNum);
+          }
+        };
+
+        $scope.startDrawing = function (event) {
+          if ($scope.drawingMode) {
+            isDrawing = true;
+            const rect = event.target.getBoundingClientRect();
+            const ctx = event.target.getContext('2d');
+            const clientX = event.type.includes('touch') ? event.touches[0].clientX : event.clientX;
+            const clientY = event.type.includes('touch') ? event.touches[0].clientY : event.clientY;
+            lastX = clientX - rect.left;
+            lastY = clientY - rect.top;
+          }
+        };
+
+        $scope.draw = function (event) {
+          if (!isDrawing) return;
+          const rect = event.target.getBoundingClientRect();
+          const ctx = event.target.getContext('2d');
+          const clientX = event.type.includes('touch') ? event.touches[0].clientX : event.clientX;
+          const clientY = event.type.includes('touch') ? event.touches[0].clientY : event.clientY;
+          ctx.beginPath();
+          ctx.moveTo(lastX, lastY);
+          ctx.lineTo(clientX - rect.left, clientY - rect.top);
+          ctx.strokeStyle = 'red';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          $scope.annotations.push({
+            page: $scope.pageNum,
+            startX: lastX,
+            startY: lastY,
+            endX: clientX - rect.left,
+            endY: clientY - rect.top,
+          });
+          lastX = clientX - rect.left;
+          lastY = clientY - rect.top;
+        };
+
+        $scope.stopDrawing = function () {
+          isDrawing = false;
+        };
+
+        $scope.savePdf = async function () {
+          const url = 'pdfs/1.pdf';
+          const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
+          const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+
+          for (let i = 1; i <= pdfDoc.getPageCount(); i++) {
+            const page = pdfDoc.getPage(i - 1);
+            const annotations = $scope.annotations.filter(a => a.page === i);
+            annotations.forEach(a => {
+              page.drawLine({
+                start: { x: a.startX, y: a.startY },
+                end: { x: a.endX, y: a.endY },
+                thickness: 3,
+                color: PDFLib.rgb(1, 0, 0),
+              });
+            });
+          }
+
+          const pdfBytes = await pdfDoc.save();
+          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const url1 = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url1;
+          a.download = 'annotated.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        };
+
+        $scope.renderPage = function (num) {
+          $scope.pageNum = num;
+          $scope.pdfDoc.getPage(num).then(function (page) {
+            const viewport = page.getViewport({ scale: 1 });
+            const canvas = document.getElementById('pdf-canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+              canvasContext: context,
+              viewport: viewport,
+            };
+
+            page.render(renderContext).promise.then(function () {
+              $scope.visitedPages.push(num);
+              $scope.$apply();
+              $scope.annotations
+                .filter(a => a.page === num)
+                .forEach(a => {
+                  context.beginPath();
+                  context.moveTo(a.startX, a.startY);
+                  context.lineTo(a.endX, a.endY);
+                  context.strokeStyle = 'red';
+                  context.lineWidth = 3;
+                  context.stroke();
+                });
+            });
+          });
+        };
+
+        $scope.initPdf = async function () {
+          const url = 'pdfs/1.pdf';
+          const pdf = await pdfjsLib.getDocument(url).promise;
+          $scope.pdfDoc = pdf;
+          $scope.renderPage(1);
+        };
+
+        $scope.initPdf();
+      });
+  </script>
+</body>
+
+</html>

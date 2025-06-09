@@ -1,0 +1,182 @@
+<main id="main" class="main">
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+
+            <!-- Sales Card -->
+            <div class="col-xxl-3">
+              <div class="card info-card sales-card">
+               
+                <div class="card-body">
+                  <h5 class="card-title">Exams <span>| Count</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-receipt"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ExamsLength.length}}</h6>
+                     
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+            <!-- Revenue Card -->
+            <div class="col-xxl-3">
+              <div class="card info-card revenue-card">
+                <div class="card-body">
+                  <h5 class="card-title">QPapers <span>| Count</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{papercodeLength.length}}</h6>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!-- Customers Card -->
+            <div class="col-xxl-3">
+
+              <div class="card info-card customers-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Answer Sheets <span>| Upload</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-sticky"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 *ngFor="let x of DashBoardData">{{x.upload}}</h6>
+                 
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card --> 
+            <div class="col-xxl-3">
+
+              <div class="card info-card customers-card">
+    
+                <div class="card-body">
+                  <h5 class="card-title">Valued <span>| Count</span></h5>
+    
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon-red card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bx bx-edit-alt"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 *ngFor="let x of DashBoardData">{{x.corrected}}</h6>
+                 
+    
+                    </div>
+                  </div>
+    
+                </div>
+              </div>
+    
+            </div>
+            <!-- Recent Sales -->
+            <!-- <div class="col-xxl-12">
+              <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                  <h5 class="card-title">Faculty <span>| Activity</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">S.No</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Campus</th>
+                        <th scope="col">PaperCode</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Allocated</th>
+                        <th scope="col">Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>1</th>
+                        <th scope="row"><a href="#">#2457</a></th>
+                        <td>ADC KKD</td>
+                        <td>240810311169817</td>
+                        <td>16</td>
+                        <td>10</td>
+                        <td>6</td>
+                      </tr>
+                      <tr>
+                        <th>2</th>
+                        <th scope="row"><a href="#">#2147</a></th>
+                        <td>AWDC KKD</td>
+                        <td>240810291169816</td>
+                        <td>16</td>
+                        <td>10</td>
+                        <td>6</td>
+                      </tr>
+                      <tr>
+                        <th>3</th>
+                        <th scope="row"><a href="#">#2049</a></th>
+                        <td>ADC RJY</td>
+                        <td>240810271169815</td>
+                        <td>16</td>
+                        <td>10</td>
+                        <td>6</td>
+                      </tr>
+                      <tr>
+                        <th>4</th>
+                        <th scope="row"><a href="#">#2644</a></th>
+                        <td>AWDC RJY</td>
+                        <td>240718361169771</td>
+                        <td>16</td>
+                        <td>10</td>
+                        <td>6</td>
+                      </tr>
+                     
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div> -->
+            <!-- End Recent Sales -->
+
+           
+          </div>
+        </div><!-- End Left side columns -->
+       
+        <!-- Right side columns -->
+        <!-- <div class="col-lg-4">
+          <div class="card">
+           
+
+            <div class="card-body">
+              <h5 class="card-title">&nbsp;</h5>
+              <img src="./../../../../assets/img/DigiVal.jpg" alt="" style="height: 100%;width: 100%;">
+           
+            </div>
+          </div>
+
+           
+        </div> -->
+
+      </div>
+    </section>
+
+  </main>

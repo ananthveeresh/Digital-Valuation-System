@@ -1,0 +1,698 @@
+<main id="main" class="main">
+    <section class="section dashboard">
+        <div class="card row">
+            <div class="col-lg-12">
+                <div class="p-4">
+                    <form class="form-group" [formGroup]="registration_form" novalidate>
+                        <span class="d-md-flex justify-content-between"> 
+                            <div class="d-flex flex-column">
+                                <div>SUC Code</div>
+                                <div class="hdng2 m-0 p-0" style="background-color: transparent;">{{student_profile_data.student_no}} </div>
+                            </div>
+                            <!-- <div class="d-flex flex-column">
+                                <div>REG NO</div>
+                                <div class="hdng2 m-0 p-0" style="background-color: transparent;">{{student_profile_data.board_id}} </div>
+                                </div> -->
+                        </span>
+                        <h3 class="hdng2 mt-4">Primary Details</h3>
+                        <div class="row g-3 align-items-baseline">
+                            <div class="col-lg-6">
+                                <label for="inputNanme4" class="form-label"> 
+                                    <sup class="text-danger"> * </sup> Course
+                                </label>
+                                <select 
+                                    id="inputState" 
+                                    class="form-select" 
+                                     
+                                    formControlName="course" 
+                                    required>
+                                    <option *ngFor="let x of selected_course_info" [value]="x.full_course_name">
+                                        {{ x.full_course_name }}
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> Second Language</label>
+                                <select id="inputState" class="form-select" formControlName="language">
+                                    <option value="TELUGU">TELUGU</option>
+                                    <option value="HINDI">HINDI</option>
+                                    <option value="ENGLISH">ENGLISH</option>
+                                    <option value="SANSKRIT">SANSKRIT</option>
+                                    <option value="NOT APPLICABLE">NOT APPLICABLE (International Students Only)</option>
+                                </select>
+                            </div>                           
+
+                            <div class="col-lg-4">
+                                <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> Name of the Student (AS PER SSC)
+                                </label>
+                                <input type="text" class="form-control" formControlName="studentname" maxlength="200"
+                                    autocomplete="off" />
+                                <div *ngIf="registration_form.get('studentname')?.touched  && registration_form.get('studentname')?.invalid"
+                                    class="validation-error-messages">
+                                    <div *ngIf="registration_form.get('studentname')?.errors?.['required']"
+                                        class="validation-error">
+                                        Student Name is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label for="dob" class="form-label"> <sup class="text-danger"> * </sup> Date of Birth
+                                </label>
+                                <input type="date" id="dob" class="form-control" formControlName="dob"
+                                    autocomplete="off" />
+                            </div>
+
+                            <div class="col-lg-4">
+                                <label for="gender" class="form-label d-block"> <sup class="text-danger"> * </sup> Gender</label>
+                                <div class="hstack gap-3 form-control m-0 px-3 pt-1 pb-0 justify-content-start">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="gridRadios1"
+                                            formControlName="gender" value="M" />
+                                        <label class="form-check-label" for="gridRadios1">Male</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="gridRadios2"
+                                            formControlName="gender" value="F" />
+                                        <label class="form-check-label" for="gridRadios2">Female</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="hdng2 mt-4">Personal Details</h3>
+                        <div class="row align-items-baseline g-3">
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> Religion</label>
+                                        <input type="text" class="form-control" formControlName="religion"
+                                            autocomplete="off">
+                                        <div *ngIf="registration_form.get('religion')?.touched  && registration_form.get('religion')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('religion')?.errors?.['required']"
+                                                class="validation-error">
+                                                Religion is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Reservation Category </label>
+                                        
+                                        <select 
+                                            id="reservationCategory" 
+                                            class="form-select" 
+                                            formControlName="reservation" 
+                                            required>
+                                            <option value="OC">OC</option>
+                                            <option value="BC">BC</option>
+                                            <option value="SC">SC</option>
+                                            <option value="ST">ST</option>
+                                        </select>                                       
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Physically Challenged </label>
+                                        <select id="inputState" class="form-select"
+                                            formControlName="physicallychallenged">
+                                            <option value="VH">VH</option>
+                                            <option value="HH">HH</option>
+                                            <option value="OH">OH</option>
+                                            <option value="NOT APPLICABLE">NOT APPLICABLE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> Student Email</label>
+                                        <input type="text" class="form-control" formControlName="studentemail"
+                                            autocomplete="off" placeholder="Enter student email">
+
+                                        <div *ngIf="registration_form.get('studentemail')?.touched  && registration_form.get('studentemail')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('studentemail')?.errors?.['required']"
+                                                class="validation-error">
+                                                email is required.
+                                            </div>
+                                            <div *ngIf="registration_form.get('studentemail')?.value && registration_form.get('studentemail')?.errors?.['email']"
+                                                class="validation-error">
+                                                Please enter a valid email address.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Student Mobile Number</label>
+                                        <input type="text" class="form-control" autocomplete="off" id="inputAddress"
+                                            formControlName="studentmobilenumber" maxlength="10" pattern="[0-9]*"
+                                            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
+
+                                        <div *ngIf="registration_form.get('studentmobilenumber')?.touched  && registration_form.get('studentmobilenumber')?.invalid"
+                                            class="validation-error-messages">
+
+                                            <div *ngIf="registration_form.get('studentmobilenumber')?.errors?.['required']"
+                                                class="validation-error">
+                                                Student Mobile Number is required.
+                                            </div>
+                                            <div *ngIf="registration_form.get('studentmobilenumber')?.errors?.['minlength']"
+                                                class="validation-error">
+                                                Student Mobile Number must be a minimum of 10 digits.
+                                            </div>
+                                            <div *ngIf="registration_form.get('studentmobilenumber')?.errors?.['maxlength']"
+                                                class="validation-error">
+                                                Student Mobile Number must not exceed 10 digits.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Student Whatsapp Number
+                                        </label>
+                                        <input type="text" class="form-control" autocomplete="off" id="inputAddress"
+                                            formControlName="studentwhatsappnumber" maxlength="10" pattern="[0-9]*"
+                                            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
+                                        <div *ngIf="registration_form.get('studentwhatsappnumber')?.touched  && registration_form.get('studentwhatsappnumber')?.invalid"
+                                            class="validation-error-messages">
+
+                                            <div *ngIf="registration_form.get('studentwhatsappnumber')?.errors?.['required']"
+                                                class="validation-error">
+                                                Student Whatsapp Number is required.
+                                            </div>
+                                            <div *ngIf="registration_form.get('studentwhatsappnumber')?.errors?.['minlength']"
+                                                class="validation-error">
+                                                Student Whatsapp Number must be a minimum of 10 digits.
+                                            </div>
+                                            <div *ngIf="registration_form.get('studentwhatsappnumber')?.errors?.['maxlength']"
+                                                class="validation-error">
+                                                Student Whatsapp Number must not exceed 10 digits.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> Student Address</label>
+                                        <textarea class="form-control" autocomplete="off" id="floatingTextarea"
+                                            style="height: 179px;" formControlName="studentaddress"></textarea>
+                                        <div *ngIf="registration_form.get('studentaddress')?.touched  && registration_form.get('studentaddress')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('studentaddress')?.errors?.['required']"
+                                                class="validation-error">
+                                                Student Address is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="hdng2 mt-4">Student Details</h3>
+                        <div class="row align-items-baseline g-3">
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> Candidate Aadhaar Number</label>
+                                        <input type="text" autocomplete="off" class="form-control"
+                                            formControlName="studentaadhaarnumber" maxlength="13" pattern="[0-9]*"
+                                            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
+                                        <div *ngIf="registration_form.get('studentaadhaarnumber')?.touched  && registration_form.get('studentaadhaarnumber')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('studentaadhaarnumber')?.errors?.['required']"
+                                                class="validation-error">
+                                                Student Aadhaar Number is required.
+                                            </div>
+                                            <div *ngIf="registration_form.get('studentaadhaarnumber')?.errors?.['minlength']"
+                                                class="validation-error">
+                                                Student Aadhaar Number must be a minimum of 12 digits.
+                                            </div>
+                                            <div *ngIf="registration_form.get('studentaadhaarnumber')?.errors?.['maxlength']"
+                                                class="validation-error">
+                                                Student Aadhaar Number must not exceed 13 digits.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Mole -1 (AS PER SSC)
+                                           
+                                        </label>
+                                        <input type="text" class="form-control" autocomplete="off" id="inputAddress"
+                                            formControlName="mole1">
+
+                                        <div *ngIf="registration_form.get('mole1')?.touched  && registration_form.get('mole1')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('mole1')?.errors?.['required']"
+                                                class="validation-error">
+                                                mole 1 is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Mole -2 (AS PER SSC)
+                                          
+                                        </label>
+                                        <input type="text" class="form-control" autocomplete="off" id="inputAddress"
+                                            formControlName="mole2">
+
+                                        <div *ngIf="registration_form.get('mole2')?.touched  && registration_form.get('mole2')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('mole2')?.errors?.['required']"
+                                                class="validation-error">
+                                                mole 2 is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> Father Name</label>
+                                        <input type="text" class="form-control" formControlName="fathername"
+                                            autocomplete="off">
+                                        <div *ngIf="registration_form.get('fathername')?.touched  && registration_form.get('fathername')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('fathername')?.errors?.['required']"
+                                                class="validation-error">
+                                                Father Name is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Father Mobile Number</label>
+                                        <input type="text" class="form-control" autocomplete="off" id="inputAddress"
+                                            formControlName="fathermobilenumber" maxlength="10" pattern="[0-9]*"
+                                            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
+                                        <div *ngIf="registration_form.get('fathermobilenumber')?.touched  && registration_form.get('fathermobilenumber')?.invalid"
+                                            class="validation-error-messages">
+
+                                            <div *ngIf="registration_form.get('fathermobilenumber')?.errors?.['required']"
+                                                class="validation-error">
+                                                Father Mobile Number is required.
+                                            </div>
+                                            <div *ngIf="registration_form.get('fathermobilenumber')?.errors?.['minlength']"
+                                                class="validation-error">
+                                                Father Mobile Number must be a minimum of 10 digits.
+                                            </div>
+                                            <div *ngIf="registration_form.get('fathermobilenumber')?.errors?.['maxlength']"
+                                                class="validation-error">
+                                                Father Mobile Number must not exceed 10 digits.
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> Father Email </label>
+                                        <input type="text" class="form-control" id="inputAddress"
+                                            formControlName="fatheremail" autocomplete="off">
+                                            <div *ngIf="registration_form.get('fatheremail')?.touched  && registration_form.get('fatheremail')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('fatheremail')?.value && registration_form.get('fatheremail')?.errors?.['email']"
+                                                class="validation-error">
+                                                Please enter a valid email address.
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row align-items-baseline g-3">
+                                    <div class="col-lg-12">
+                                        <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup>  Mother Name</label>
+                                        <input type="text" class="form-control" formControlName="mothername"
+                                            autocomplete="off">
+                                        <div *ngIf="registration_form.get('mothername')?.touched  && registration_form.get('mothername')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('mothername')?.errors?.['required']"
+                                                class="validation-error">
+                                                Mother Name is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Mother Mobile Number </label>
+
+
+                                        <input type="text" class="form-control" id="inputAddress"
+                                            formControlName="mothermobilenumber" autocomplete="off" maxlength="10"
+                                            pattern="[0-9]*"
+                                            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
+                                        <div *ngIf="registration_form.get('mothermobilenumber')?.touched  && registration_form.get('mothermobilenumber')?.invalid"
+                                            class="validation-error-messages">
+
+                                            <div *ngIf="registration_form.get('mothermobilenumber')?.errors?.['required']"
+                                                class="validation-error">
+                                                Mother Mobile Number is required.
+                                            </div>
+                                            <div *ngIf="registration_form.get('mothermobilenumber')?.errors?.['minlength']"
+                                                class="validation-error">
+                                                Mother Mobile Number must be a minimum of 10 digits.
+                                            </div>
+                                            <div *ngIf="registration_form.get('mothermobilenumber')?.errors?.['maxlength']"
+                                                class="validation-error">
+                                                Mother Mobile Number must not exceed 10 digits.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="inputAddress" class="form-label"> Mother Email
+
+                                        </label>
+                                        <input type="text" class="form-control" id="inputAddress"
+                                            formControlName="motheremail" autocomplete="off">
+
+                                            <div *ngIf="registration_form.get('motheremail')?.touched  && registration_form.get('motheremail')?.invalid"
+                                            class="validation-error-messages">
+                                            <div *ngIf="registration_form.get('motheremail')?.value && registration_form.get('motheremail')?.errors?.['email']"
+                                                class="validation-error">
+                                                Please enter a valid email address.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="hdng2 col-12 mt-4">SSC Details</h3>
+                        <div class="row align-items-center g-3 ">
+                            <div class="col-lg-3">
+
+                                <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> SSC Board</label>
+                                <select id="inputState" class="form-select" formControlName="sscboard">
+                                    <option value="STATE">STATE</option>
+                                    <option value="CBSE">CBSE</option>
+                                    <option value="ICSE">ICSE</option>
+                                    <option value="OTHERS">OTHERS</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> SSC Hall Ticket
+                                    Number</label>
+                                <input type="text" class="form-control" formControlName="sschallticketnumber"
+                                    autocomplete="off" maxlength="15" pattern="[0-9]*"
+                                    (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
+                                <div *ngIf="registration_form.get('sschallticketnumber')?.touched  && registration_form.get('sschallticketnumber')?.invalid"
+                                    class="validation-error-messages">
+                                    <div *ngIf="registration_form.get('sschallticketnumber')?.errors?.['required']"
+                                        class="validation-error">
+                                        SSC Hall Ticket Number is required.
+                                    </div>
+
+                                    <div *ngIf="registration_form.get('sschallticketnumber')?.errors?.['maxlength']"
+                                        class="validation-error">
+                                        SSC Hall Ticket Number must not exceed 15 digits.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-6"><label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> SSC GPA /
+                                    Percentage</label>
+                                <input type="text" class="form-control" formControlName="sscgpa" />
+                                <div *ngIf="registration_form.get('sscgpa')?.touched  && registration_form.get('sscgpa')?.invalid"
+                                    class="validation-error-messages">
+                                    <div *ngIf="registration_form.get('sscgpa')?.errors?.['required']"
+                                        class="validation-error">
+                                        SSC GPA /
+                                        Percentage is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <label for="inputNanme4" class="form-label"> <sup class="text-danger"> * </sup> Year of Pass</label>
+                                <select id="inputState" class="form-select" formControlName="sscyearofpass" required>
+                                    <option value="2002">2002</option>
+                                    <option value="2003">2003</option>
+                                    <option value="2004">2004</option>
+                                    <option value="2005">2005</option>
+                                    <option value="2006">2006</option>
+                                    <option value="2007">2007</option>
+                                    <option value="2008">2008</option>
+                                    <option value="2009">2009</option>
+                                    <option value="2010">2010</option>
+                                    <option value="2011">2011</option>
+                                    <option value="2012">2012</option>
+                                    <option value="2013">2013</option>
+                                    <option value="2014">2014</option>
+                                    <option value="2015">2015</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h3 class="hdng2 col-12 mt-4">Intermediate Details</h3>
+                        <div class="row align-items-center g-3">
+                            <div class="col-lg-3 col-6">
+                                <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Inter Board</label>
+                                <select id="inputState" class="form-select" formControlName="interboard" required>
+                                    <option value="BIEAP">BIEAP</option>
+                                    <option value="CBSE">CBSE</option>
+                                    <option value="ICSE">ICSE</option>
+                                    <option value="OTHERS">OTHERS</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Inter Hall Ticket Number</label>
+                                <input type="text" class="form-control" formControlName="interhallticketnumber"
+                                    maxlength="15"  autocomplete="off"
+                                     />
+                                <div *ngIf="registration_form.get('interhallticketnumber')?.touched  && registration_form.get('interhallticketnumber')?.invalid"
+                                    class="validation-error-messages">
+                                    <div *ngIf="registration_form.get('interhallticketnumber')?.errors?.['required']"
+                                        class="validation-error">
+                                        Inter Hall Ticket Number is required.
+                                    </div>
+                                    <!-- <div *ngIf="registration_form.get('sschallticketnumber')?.errors?.['minlength']" class="validation-error">
+                                                SSC Hal Ticket Number must be a minimum of 12 digits.
+                                            </div> -->
+                                    <div *ngIf="registration_form.get('interhallticketnumber')?.errors?.['maxlength']"
+                                        class="validation-error">
+                                        Inter Hall Ticket Number must not exceed 15 digits.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Inter GPA / Percentage</label>
+                                <input type="text" class="form-control" formControlName="interpercentage"
+                                    autocomplete="off" />
+                                <div *ngIf="registration_form.get('interpercentage')?.touched  && registration_form.get('interpercentage')?.invalid"
+                                    class="validation-error-messages">
+                                    <div *ngIf="registration_form.get('interpercentage')?.errors?.['required']"
+                                        class="validation-error">
+                                        Inter GPA /
+                                        Percentage is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <label for="inputAddress" class="form-label"> <sup class="text-danger"> * </sup> Year of pass</label>
+
+                                <select id="inputState" class="form-select" formControlName="interyearofpass" required>
+                                    <option value="2002">2002</option>
+                                    <option value="2003">2003</option>
+                                    <option value="2004">2004</option>
+                                    <option value="2005">2005</option>
+                                    <option value="2006">2006</option>
+                                    <option value="2007">2007</option>
+                                    <option value="2008">2008</option>
+                                    <option value="2009">2009</option>
+                                    <option value="2010">2010</option>
+                                    <option value="2011">2011</option>
+                                    <option value="2012">2012</option>
+                                    <option value="2013">2013</option>
+                                    <option value="2014">2014</option>
+                                    <option value="2015">2015</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h3 class="hdng2 mt-4">Upload Certificate</h3>
+                        <div class="row align-items-center g-3">
+                            <div class="col-lg-3">
+                                <label class="form-label"> <sup class="text-danger"> * </sup> Student Passport Size Photo <small>(.jpg, .jpeg, .png)</small> </label>
+                                <div class="hstack gap-1">
+                                    <input class="form-control" type="file" accept=".jpg, .jpeg, .png"
+                                        (change)="onFileSelected($event, 'Passport Photo')" formControlName="passportphot"  required/>
+                                    <button [disabled]="!check_upload('Passport Photo')" (click)="uploadPhoto('Passport Photo')" class="btn btn-primary btn-sm">Upload</button>
+                                    <p *ngIf="pterr" style="color: red">{{ pterr }}</p>
+                                </div>
+                                <div class="hstack gap-1" *ngIf="check_preview('Passport Photo')"
+                                    (click)="certificate_view('Passport Photo')" data-bs-toggle="modal"
+                                    data-bs-target="#previewmodal">
+                                    <small class="text-success">View Document</small>
+                                    <i class="bi bi-zoom-in fs-5"></i>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label"><sup class="text-danger"> * </sup> Student Signature  <small>(.jpg, .jpeg, .png)</small> </label>
+                                <div class="hstack gap-1">
+                                    <input class="form-control" type="file" accept=".jpg, .jpeg, .png"
+                                        (change)="onFileSelected($event, 'Student Signature')" formControlName="studentsignature" required />
+                                    <button [disabled]="!check_upload('Student Signature')" (click)="uploadPhoto('Student Signature')" class="btn btn-primary btn-sm">Upload</button>
+                                    <p *ngIf="pterr" style="color: red">{{ pterr }}</p>
+                                </div>
+                                <div class="hstack gap-1" *ngIf="check_preview('Student Signature')"
+                                    (click)="certificate_view('Student Signature')" data-bs-toggle="modal"
+                                    data-bs-target="#previewmodal">
+                                    <small class="text-success">View Document</small>
+                                    <i class="bi bi-zoom-in fs-5"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label"><sup class="text-danger"> * </sup> SSC Certificate <small>(.pdf)</small> </label>
+                                <div class="hstack gap-1">
+                                    <input class="form-control" type="file" accept=".pdf"
+                                        (change)="onFileSelected($event, 'SSC Certificate')" formControlName="ssccertificate"  required/>
+                                    <button [disabled]="!check_upload('SSC Certificate')" (click)="uploadPhoto('SSC Certificate')" class="btn btn-primary btn-sm">Upload</button>
+                                    <p *ngIf="pterr" style="color: red">{{ pterr }}</p>
+                                </div>
+                                <div class="hstack gap-1" *ngIf="check_preview('SSC Certificate')"
+                                    (click)="certificate_view('SSC Certificate')" data-bs-toggle="modal"
+                                    data-bs-target="#previewmodal">
+                                    <small class="text-success">View Document</small>
+                                    <i class="bi bi-zoom-in fs-5"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label"><sup class="text-danger"> * </sup> Intermediate Certificate <small>(.pdf)</small> </label>
+                                <div class="hstack gap-1">
+                                    <input class="form-control" type="file" accept=".pdf"
+                                        (change)="onFileSelected($event, 'Intermediate Certificate')" formControlName="intermediatecertificate" required />
+                                    <button [disabled]="!check_upload('Intermediate Certificate')" (click)="uploadPhoto('Intermediate Certificate')" class="btn btn-primary btn-sm">Upload</button>
+                                    <p *ngIf="pterr" style="color: red">{{ pterr }}</p>
+                                </div>
+                                <div class="hstack gap-1" *ngIf="check_preview('Intermediate Certificate')"
+                                    (click)="certificate_view('Intermediate Certificate')" data-bs-toggle="modal"
+                                    data-bs-target="#previewmodal">
+                                    <small class="text-success">View Document</small>
+                                    <i class="bi bi-zoom-in fs-5"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label"><sup class="text-danger"> * </sup> Student Aadhaar Card <small>(.pdf)</small> </label>
+                                <div class="hstack gap-1">
+                                    <input class="form-control" type="file" accept=".pdf"
+                                        (change)="onFileSelected($event, 'Student Aadhar')" formControlName="studentaadhaar" required />
+                                    <button [disabled]="!check_upload('Student Aadhar')" (click)="uploadPhoto('Student Aadhar')" class="btn btn-primary btn-sm">Upload</button>
+                                    <p *ngIf="pterr" style="color: red">{{ pterr }}</p>
+                                </div>
+                                <div class="hstack gap-1" *ngIf="check_preview('Student Aadhar')"
+                                    (click)="certificate_view('Student Aadhar')" data-bs-toggle="modal"
+                                    data-bs-target="#previewmodal">
+                                    <small class="text-success">View Document</small>
+                                    <i class="bi bi-zoom-in fs-5"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label"><sup class="text-danger"> * </sup> OAMDC (ALLOTMENT ORDER)<small>(.pdf)</small>  </label>
+                                <div class="hstack gap-1">
+
+                                    <input class="form-control" type="file" accept=".pdf"
+                                        (change)="onFileSelected($event, 'OAMDC')" formControlName="oamdc" required />
+                                    <button [disabled]="!check_upload('OAMDC')" (click)="uploadPhoto('OAMDC')" class="btn btn-primary btn-sm">Upload</button>
+                                    <p *ngIf="pterr" style="color: red">{{ pterr }}</p>
+                                </div>
+                                <div class="hstack gap-1" *ngIf="check_preview('OAMDC')"
+                                    (click)="certificate_view('OAMDC')" data-bs-toggle="modal"
+                                    data-bs-target="#previewmodal">
+                                    <small class="text-success">View Document</small>
+                                    <i class="bi bi-zoom-in fs-5"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label class="form-label">Caste Certificate <small>(.pdf)</small> </label>
+                                <div class="hstack gap-1">
+                                    <input class="form-control" type="file" accept=".pdf"
+                                        (change)="onFileSelected($event, 'Caste Certificate')" />
+                                    <button [disabled]="!check_upload('Caste Certificate')" (click)="uploadPhoto('Caste Certificate')"
+                                        class="btn btn-primary btn-sm">Upload</button>
+                                    <p *ngIf="pterr" style="color: red">{{ pterr }}</p>
+                                </div>
+                                <div class="hstack gap-1" *ngIf="check_preview('Caste Certificate')"
+                                    (click)="certificate_view('Caste Certificate')" data-bs-toggle="modal"
+                                    data-bs-target="#previewmodal">
+                                    <small class="text-success">View Document</small>
+                                    <i class="bi bi-zoom-in fs-5"></i>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
+                                formControlName="confirmation" required>
+                            <label class="form-check-label" for="flexCheckChecked">
+                                I hereby agree to the terms and conditions and confirm that all the information provided
+                                is correct. </label>
+                        </div>
+                    </form>
+
+                    <div class="row m-2">
+                        <div class="col text-center">
+                            <button class="btn btn-success " (click)="onSubmit()"
+                                [disabled]="!registration_form.valid || !areAllFilesUploaded()">Submit</button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="previewmodal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 *ngIf="selected_certificate.length>0" class="text-center text-success">
+                                    {{selected_certificate[0].docType}} </h5>                               
+                            </div>
+                            <div class="modal-body" *ngIf="selected_certificate.length==0">
+                                <h5 class="text-center text-danger"> No Data Found </h5>
+                            </div>
+                            <div class="modal-body" *ngIf="selected_certificate.length>0">
+                                <span *ngIf="selected_certificate[0].mimetype=='application/pdf'">
+                                    <iframe [src]="selected_certificate[0].fileurl" width="100%"
+                                        height="300px"></iframe>
+                                </span>
+                                <span *ngIf="selected_certificate[0].mimetype!='application/pdf'">
+                                    <a [href]="selected_certificate[0].fileurl" target="_blank"
+                                        style="text-align: center;">
+                                        <img [src]="selected_certificate[0].fileurl" class="image" height="160" />
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

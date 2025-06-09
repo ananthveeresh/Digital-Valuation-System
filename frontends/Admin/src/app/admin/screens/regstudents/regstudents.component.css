@@ -1,0 +1,8 @@
+.certificate-preview {
+    height: 200px; /* Adjust height as needed */
+  }
+  .certificate-preview iframe {
+    height: 180px; /* Adjust iframe height for PDFs */
+  }
+ 
+  

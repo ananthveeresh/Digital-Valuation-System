@@ -1,0 +1,146 @@
+<main id="main" class="main">
+    <section class="section dashboard">
+      <div class="row">
+        <div class="card" *ngIf="ShowData == 0">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title"> Create Semister</h5>
+                <div class="col-md-0">
+                  <button class="btn btn-primary btn-sm" (click)="Goto_Stdlist()"> List</button>
+                </div>
+              </div>
+          <div class="card-body">
+            <div class="d-flex gap-3 pt-3">
+              <input type="number" placeholder="Enter Exam Id" class="form-control" name="exam_id" [(ngModel)]="exam_id">
+                 
+              <button class="btn btn-primary" [disabled]="exam_id==null && exam_id==undefined" (click)="SubmitExamId()">Submit</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="ShowData == 0">
+            <div class="col-lg-12">
+
+                <div class="card" *ngIf="UniqueExamId.length > 0">
+                  <div class="card-body mt-4">
+                    <form (ngSubmit)="SubmitData()">
+                        <div *ngFor="let x of UniqueExamId;  let i = index">
+                      <div class="row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label"><b>ExamId</b></label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" value="{{x.examId}}" readonly>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label"><b>Semister</b></label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" value="Sem -{{x.semister}}" readonly>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputText" class="col-sm-2 col-form-label"><b>Exam Name</b></label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" name="examName{{ i }}" [(ngModel)]="x.examName" value="{{x.examName}}">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputDate" class="col-sm-2 col-form-label"><b>Start Date</b></label>
+                        <div class="col-sm-10">
+                          <input type="date" class="form-control" [(ngModel)]="x.fromDate" name="fromDate{{ i }}"required>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputDate" class="col-sm-2 col-form-label"><b>End Date</b></label>
+                        <div class="col-sm-10">
+                          <input type="date" class="form-control" [(ngModel)]="x.todate" name="todate{{ i }}"required>
+                        </div>
+                      </div>
+                      <!-- <div class="row mb-3">
+                        <legend class="col-form-label col-sm-2 pt-0"><b>HallTicket-Issued</b></legend>
+                        <div class="col-sm-10">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox"  [(ngModel)]="x.hallticketissue"
+                            name="hallTicketIssued{{ i }}"
+                            (change)="onCheckboxChange($event, x)" >
+                          </div>
+                        </div>
+                      </div> -->
+                      <div class="row mb-3">
+                        <label for="inputDate" class="col-sm-2 col-form-label"><b>HallTickets Start Date</b></label>
+                        <div class="col-sm-10">
+                          <input type="date" class="form-control" [(ngModel)]="x.hstartdate" name="hstartdate{{ i }}"required>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="inputDate" class="col-sm-2 col-form-label"><b>HallTickets End Date</b></label>
+                        <div class="col-sm-10">
+                          <input type="date" class="form-control" [(ngModel)]="x.henddate" name="henddate{{ i }}"required>
+                        </div>
+                      </div>
+                    </div>
+                   
+                    <!-- <div class="d-flex justify-content-center">
+                      <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary" [disabled]="isDisabled()">Submit</button>
+                      </div>
+                    </div> -->
+                      <div class="row d-flex justify-content-center">
+                        <div class="col-lg-1">
+                        <button type="submit" class="btn btn-primary" [disabled]="isDisabled()">Submit</button>
+                      </div>
+                      </div>
+                      
+                    </form>
+                    
+      
+                  </div>
+                </div>
+                <!-- <div class="modal-dialog modal-sm"> <div class="text-bg-secondary p-3" *ngIf="UniqueExamId.length == 0"><b>No Exam Found On This ExamID</b></div></div> -->
+
+               
+              </div>
+  
+        </div>
+        <div class="row" *ngIf="ShowData == 2">
+          <div class="col-lg-12">
+            
+              <div class="card" *ngIf="CreatedSemData.length > 0">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h5 class="card-title p-3"> Semister List</h5>
+                  <div class="col-md-0 p-3">
+                    <button class="btn btn-primary btn-sm" (click)="Goto_Create()"> Back</button>
+                  </div>
+                </div>
+    
+                <div class="card-body mt-4">
+                 <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Exam Id</th>
+                      <th>Semister</th>
+                      <th>Exam Name</th>
+                      <th>Start Date</th>
+                      <th>End Date</th>
+                      <th>HallTickets Start Date</th>
+                      <th>HallTickets End Date</th>
+                    </tr>
+                  </thead>  
+                  <tbody>
+                    <tr *ngFor="let x of CreatedSemData">
+                      <td>{{x.examId}}</td>
+                      <td>Sem -{{x.semister}}</td>
+                      <td>{{x.examName }}</td>
+                      <td>{{x.fromDate | date:'dd/MM/yyyy'}}</td>
+                      <td>{{x.endDate | date:'dd/MM/yyyy'}}</td>
+                      <td>{{x.hallticketstart | date:'dd/MM/yyyy'}}</td>
+                      <td>{{x.hallticketend | date:'dd/MM/yyyy'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+              </div>
+            </div>
+
+      </div>
+      </div>
+  
+    </section>
+  </main>

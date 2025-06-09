@@ -1,0 +1,188 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card" *ngIf="show_examslist == 0">
+          <div class="card-body">
+            <div class="row p-3">
+              <h5 class="card-title"> Hall Ticket Download </h5>
+              <div class="col-md-4 text-start">
+                <select class="form-select" [(ngModel)]="selected_examid">
+                  <option value="">Select Exam</option>
+                  <option value="{{x.examId}}" *ngFor="let x of exams_list"> {{x.examName}} </option>
+                </select>
+              </div>
+              <div class="col-md-3 text-start">
+
+                <button class="btn btn-primary btn-sm" (click)="get_hall_ticket()" >Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" *ngIf="show_examslist == 1">
+          <div class="d-flex justify-content-between mt-4 mx-4">
+            <div class="text-start">
+              <!-- <div class="card-titsdle px-2 text-end text-success" style="cursor: pointer;" (click)="downloadPDF()">
+                        Dowload PDF <i class="bi bi-file-earmark-arrow-down " ></i>
+                     </div> -->
+              <button (click)="downloadPDF()" type="button" class="btn btn-primary btn-sm small"><i
+                  class="bi bi-file-earmark-arrow-down me-1"></i> Dowload PDF</button>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-primary btn-sm" (click)="BackToreg()">Back</button>
+            </div>
+          </div>
+
+          <div class="card-body">
+
+            <div id="print_div" class="print" style="font-weight: 600;">
+              <div class="main2" *ngIf="StdPro.length > 0">
+
+                <img
+                  [src]="'https://analysis.aditya.ac.in/uploads/banners/' + StdPro[0].studentinfo[0].campus_id + '.png'"
+                  style="width:100%;margin-bottom:5px;" />
+                <div class="crs d-block text-center">B.Sc / B.Com / B.B.A / B.C.A Examinations, January, 2025</div>
+                <h1 style="margin-top:9px;font-size:30px;width: 100%; text-align: center;font-weight:800;">HALL - TICKET
+                </h1>
+                <h3 style="margin-top:4px;border-width:0;text-align: center;text-transform: uppercase;margin-bottom: 30px;
+padding: 9px 5px 7px 3px; border-bottom: 2px double #333;display: block;">
+                  {{sem_name}}
+                </h3>
+
+                <div class="topicPageBreak photBlock" style="border-bottom:1px #ccc solid;">
+                  <article class="hstack" *ngFor="let x of StdPro" style="align-items: self-start;">
+                    <aside>
+                      <div class="hstack2">
+
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="noborder gap">
+                          <tr>
+                            <td>
+                              <p>Hall Ticket No</p>
+                            </td>
+                            <td>:</td>
+                            <td class="ms">
+                              <div class="ms" style="font-size:18px">{{boardId}}</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <p>Name</p>
+                            </td>
+                            <td>:</td>
+                            <td class="ms">
+                              <div class="ms">{{x.studentname}}</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <p>Father Name</p>
+                            </td>
+                            <td>:</td>
+                            <td class="ms">
+                              <div class="ms">{{x.fathername}}</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <p>Mother Name</p>
+                            </td>
+                            <td>:</td>
+                            <td class="ms">
+                              <div class="ms">{{x.mothername}}</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <p>Class & Group</p>
+                            </td>
+                            <td>:</td>
+                            <td>
+                              <div class="ms">{{x.course[0].full_course_name}}</div>
+
+                            </td>
+                          </tr>
+                        </table>
+
+                      </div>
+                    </aside>
+                    <table>
+                      <tr>
+                        <td style="border-width:0;padding:0;">Aadhar</td>
+                        <td style="border-width:0;padding:0 5px 0 2px;">:</td>
+                        <td style="border-width:0;padding:0;"> {{x.studentaadhaarnumber}}</td>
+                      </tr>
+                      <tr>
+                        <td style="border-width:0;padding:0;">SUC</td>
+                        <td style="border-width:0;padding:0 5px 0 2px;">:</td>
+                        <td style="border-width:0;padding:0;"> {{x.suc}}</td>
+                      </tr>
+                    </table>
+
+                    <aside>
+
+
+                      <img
+                        [src]="'https://analysis.aditya.ac.in/uploads/student_photos/' + x.studentinfo[0].std_id + '.jpg'"
+                        alt="Student Photo" height="120" width="100" />
+                    </aside>
+                  </article>
+                </div>
+                <div class="hdng_warper" style="margin-bottom: 30px">
+                </div>
+                <div class="topicPageBreak">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                      <tr style=" text-align:left" class="bold">
+                        <td width="7%" style="text-align:left;white-space:nowrap;">Date & Time</td>
+                        <td width="13%" style="text-align:left">Semester</td>
+                        <td width="80%">Subjects Appearing</td>
+                      </tr>
+
+                      <tr *ngFor="let x of subject_list">
+                        <td style="white-space:nowrap;">{{x.examDate | date : 'dd/MM/yy'}} (A.N) </td>
+                        <td style="width: 35%;">{{x.examName | uppercase }}</td>
+                        <td>{{ x.subjectName | uppercase }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <footer class="mt">
+                  <aside style="display:flex;justify-content: space-between;;width:100%;" *ngFor="let x of StdPro">
+                    <div class="flex-grow-1"> <b>FN - 9 AM to 12 Noon,&nbsp;&nbsp;&nbsp;&nbsp;AN - 1PM to 4pm</b></div>
+                    <div>
+                      <div class="vstack align-items-center">
+                        <!-- <img [src]="trustedImageUrl1" alt="Principal's Signature" style="width: 80px; height: auto;" /> -->
+
+                        <img
+                          [src]="'https://analysis.aditya.ac.in/uploads/principal_signature/' + x.studentinfo[0].campus_id + '.jpg'"
+                          alt="Principal's Signature" style="width: 80px; height: auto;" />
+                        <div>PRINCIPAL</div>
+                      </div>
+                    </div>
+                  </aside>
+                  <div style="text-align:left;margin-top:50px">Signature of the Candidate</div><br>
+                  <aside style="display:flex;width:100%;column-gap:20px;">
+                    <div><b>Note:</b>&nbsp;&nbsp;&nbsp;</div>
+                    <ol style="text-align:left;padding:0;margin:0;display:grid;row-gap:5px;">
+
+                      <li class="m-0">Students should bring the Identity Card and Hall Ticket during the
+                        examinations without fail. .</li>
+                      <li class="m-0">Students are not allowed to write examination if they
+                        do not bring both ID card and hall ticket</li>
+                      <li class="m-0">Students should be present in the Examination Hall 15 minutes before the
+                        commencement of the examination.</li>
+                      <li class="m-0">Mobile phones, smartwatches, or any other electronic gadgets are strictly not
+                        allowed inside the
+                        examination hall.</li>
+                    </ol>
+                  </aside>
+                </footer>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

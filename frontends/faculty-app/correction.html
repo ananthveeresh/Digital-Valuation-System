@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="pdfAnnotationApp">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paper Valuation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.16.0/pdf-lib.min.js"></script>
+
+    <script src="app.js"></script>
+    <script src="pdfAnnotationDirective.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#sidebarCollapse").on("click", function() {
+                $("#sidebar").toggleClass("active");
+                $("#content").toggleClass("active");
+            });
+        });
+
+    </script>
+</head>
+
+<body ng-controller="PdfAnnotationController">
+    <div id="sidebar" class="px-4 shadow pt-4" style="padding-bottom: 100px;">
+        <div class="sidefooter mt-3">
+            <div class="row">
+                <div class="d-flex justify-content-between mb-3 mt-1">
+                    <div>
+                        <h5 class="text-primary" title={{correctionpaperinfo.subject}}>
+                            {{correctionpaperinfo.subject}}
+                        </h5>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary" ng-click="gotohome()">
+                            <i class="fa fa-home fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <hr class="m-0 mb-3 p-0" />
+                <div class="p-2 border rounded bg-light mb-2" ng-repeat="x in total_questios">
+                    <div class="d-flex justify-content-between fw-bold fs-6">
+                        <span>{{x.Section}}</span><span>{{x.MustAnswerQuestions}}X{{x.EachQuestion}}={{x.TotalMaxmarks}}</span>
+                    </div>
+                    <span class="text-success d-block mb-1 fs-7 p-1" style="font-size: 12px">{{x.SectionInstruction}}</span>
+
+                    <div ng-if="x.SectionDivider != 'or'">
+                        <button id="sidebarCollapse" ng-repeat="y in x.subsections[0].Questions" ng-class="y.applied_marks !== undefined && y.applied_marks >= 0 ? 'active' : ''" class="btn btn-outline-success m-1 btn-sm" ng-click="selectQuestion(y)">
+                            {{y.Qlabel}}
+                        </button>
+                    </div>
+
+                    <div ng-if="x.SectionDivider == 'or'">
+                        <div class="d-flex flex-wrap">
+                            <div ng-repeat="y in x.subsections" class="d-inline-flex">
+                                <span ng-repeat="z in y.Questions track by $index" ng-init="questionIndex = $index">
+                                    <button id="sidebarCollapse" ng-class="z.applied_marks && z.applied_marks > 0 ? 'active' : ''" class="btn btn-sm btn-outline-success m-1" ng-click="selectQuestion(z)">
+                                        {{z.Qlabel}}
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span class="text-primary h6 mt-4">Pages Visited </span>
+            <hr class="m-1 pe-2" />
+            <button ng-repeat="i in total_no_of_pages" ng-click="get_page(i)" ng-class="{'btn btn-sm btn-danger m-1': pageNum == i, 
+      'btn btn-sm btn-success m-1': visitedPages.includes(i), 
+      'btn btn-sm btn-outline-primary m-1': !visitedPages.includes(i) && pageNum != i}">
+                {{i}}
+            </button>
+            <div class="d-grid gap-2 mt-2">
+
+                <!-- <span class="text-primary h6 mb-0">Marks Block</span>
+                <hr class="m-1 pe-2">
+                <div class="container">
+                    <h5 class="small">{{total_questios[0].Section}}</h5>
+                    <table class="table table-bordered small table-sm">
+                        <tbody>
+                            <tr ng-repeat="section in total_questios[0].subsections" class="text-center">
+                                <th>Q</th>
+
+                                <td ng-repeat="question in section.Questions">
+                                    {{question.Qlabel}}
+                                </td>
+                            </tr>
+                            <tr ng-repeat="section in total_questios[0].subsections" class="text-center">
+                                <th>M</th>
+                                <td ng-repeat="question in section.Questions" >
+                                    <div class="marks_Style">{{question.applied_marks || 0}}</div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <h5 class="small">{{total_questios[1].Section}}</h5>
+                    <table class="table table-bordered small table-sm">
+                        <tbody>
+                            <tr class="text-center">
+                                <th>Q</th>
+                                <td ng-repeat="section in total_questios[1].subsections" >
+                                    <span ng-repeat="question in section.Questions">
+                                        {{question.Qlabel}}{{$last ? '' : ', '}}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="text-center">
+                                <th>M</th>
+                                <td ng-repeat="section in total_questios[1].subsections" >
+                                    <span ng-repeat="question in section.Questions" class="marks_Style">
+                                        {{question.applied_marks || 0}}{{$last ? '' : ', '}}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+
+
+                    <table class="table table-striped table-bordered w-100">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;" colspan="2">Summary Report</th>
+                            </tr>
+                            <tr>
+                                <th style="text-align: center;">Part</th>
+                                <th style="text-align: center;">Total Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="section in total_questios">
+                                <td style="text-align: center">{{section.Section }}</td>
+                                <td style="text-align: center;">{{section.total}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;"><span>Grand Total</span></td>
+                                <td style="text-align: center;" class="fw-bold">{{grandTotal}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div>
+                    <button id="save-pdf-button" class="btn btn-primary btn-sm float-end me-2 w-100" ng-click="saveModifiedPDF()">
+                        Save
+                    </button>
+                    <button id="loading-button" class="btn btn-secondary btn-sm float-end me-2" style="display: none" disabled>
+                        Loading...
+                    </button>
+                    <b class="text-center"><span id="success-message" class="text-center text-success" style="display: none">
+                        Paper valuation submitted successfully!</span>
+                    </b>
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid col-xl-8">
+        <div class="row mb-2 pt-2">
+            <div class="row col-12 mt-4" ng-if="selected_ques_obj.length > 0">
+                <div class="col-8 m-0">
+                    <h6 class="text-start text-danger fs-5">
+                        {{selectedQuestionValue}}.
+                        {{selected_ques_obj[0].question_description}}
+                    </h6>
+                </div>
+                <div class="col-4 d-flex text-end">
+                    <select class="form-control form-control-sm" ng-model="selectedMarks">
+                        <option value="">Enter Marks</option>
+                        <option ng-repeat="i in Marks" value="{{i}}" ng-if="selected_ques_obj[0].Qmarks>=i">
+                            {{i}}
+                        </option>
+                    </select>
+
+                    <button class="btn btn-primary btn-sm" ng-if="!selectedMarks==''" ng-click="addMarks(selectedMarks)">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2"></div>
+        <div class="row" .>
+            <div class="col-12">
+                <div id="pdf-container">
+                    <canvas id="pdf-canvas" pdf-annotation></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="btn-group w-100" role="group">
+                <button id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <button id="draw-mode-button" class="btn btn-sm btn-outline-primary" ng-click="drawMode()">
+                    <i ng-class="!drawingMode?'fa fa-pencil fa-lg':'fa fa-eye fa-lg'"></i>
+                </button>
+                <button id="undo-button" class="btn btn-sm btn-outline-primary" ng-click="eraser()">
+                    <i ng-class="!deletemode?'fa fa-eraser fa-lg':'fa fa-stop fa-lg'"></i>
+                </button>
+                <button id="previous-page-button" class="btn btn-sm btn-outline-primary" ng-click="previousPage()">
+                    <i class="fa fa-chevron-left fa-lg"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-primary">
+                    <span class="h5">{{pageNum}}</span>
+                </button>
+                <button id="next-page-button" class="btn btn-sm btn-outline-primary" ng-click="nextPage()">
+                    <i class="fa fa-chevron-right fa-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

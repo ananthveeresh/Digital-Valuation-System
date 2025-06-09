@@ -1,0 +1,83 @@
+<div *ngIf="show_sub_list == 0">
+  <div class="row" style="margin-top: -20px;">
+    <div class="col-md-10 col-10 text-start">
+      <h5 class="card-title">Subject List</h5>
+    </div>
+    <div class="col-md-2 col-2 text-end mt-3">
+        <button class="btn btn-success btn-sm" (click)="go_to_add()">Add</button>
+    </div>
+  </div>
+  <table class="table table-bordered table-sm" *ngIf="examsubject_list.length > 0">
+    <thead>
+      <tr class="text-center table-primary">
+        <th>S.No</th>
+        <th>University Name</th>
+        <th>Sem Name</th>
+        <th>Group Name</th>
+        <th>Subject Name</th>
+        <th>Model Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of examsubject_list; let i=index">
+        <th class="text-center"> {{i+1}} </th>
+        <td> {{x.UniversityName}} </td>
+        <td> Sem - {{x.SemId}} </td>
+        <td> {{x.GroupName}} </td>
+        <td> {{x.Subject}} </td>
+        <td> {{x.ModelName}} </td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="text-danger text-center m-2" *ngIf="examsubject_list.length == 0"> No Data Found </h5>
+</div>
+
+<div *ngIf="show_sub_list == 1">
+  <div class="row">
+    <div class="col-md-10 col-10">
+      <h5 class="card-title" style="margin-top: -20px;">Subject  Add</h5>
+    </div>
+    <div class="col-md-2 col-2 text-end">
+      <button class="btn btn-primary btn-sm" (click)="show_sub_list = 0">List</button>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: -15px;">
+    <div class="col-md-2 col-3" *ngFor="let x of semester_list">
+      <input type="checkbox" [(ngModel)]="x.subject_checked_status"> Sem - {{x.semester}}
+    </div>
+  </div>
+
+  <div class="text-center mt-3" *ngIf="examsubject_list.length == 0">
+    <button class="btn btn-warning btn-sm" [disabled]="!isAnySemesterChecked()" (click)="get_subjects()">Next</button>
+  </div>
+
+  <div *ngIf="final_subject_list.length > 0"> <hr/>
+    <table class="table table-bordered table-sm" *ngIf="final_subject_list.length > 0">
+      <tbody class="mt-3" *ngFor="let x of final_subject_list; let i=index">
+        <tr class="table-primary">
+          <th class="text-center" colspan="3">Sem - {{x.sem[0].SemName}}</th>
+        </tr>
+        <tr class="text-center table-secondary">
+          <th>S.No</th>
+          <th>Subject</th>
+          <th>Model Paper</th>
+        </tr>
+        <tr *ngFor="let y of x.sem; let j=index">
+          <th class="text-center"> {{j+1}} </th>
+          <td> {{y.SubjectName}} </td>
+          <td>
+            <select class="form-select" [(ngModel)]="y.modelpaper_id">
+              <option value="">Select Model Paper</option>
+              <option value="{{z.modelId}}" *ngFor="let z of model_paper_list"> {{z.modelName}} </option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="text-center mt-3">
+      <button class="btn btn-primary btn-sm" (click)="onSubject_submit()">Submit</button>
+    </div>
+  </div>
+</div>

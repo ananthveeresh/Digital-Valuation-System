@@ -1,0 +1,50 @@
+services:
+  folder_creater:
+    build:
+      context: ./folder_creater
+      dockerfile: Dockerfile
+    image: folder_creater
+    tty: true
+    volumes:
+      - ./uploads:/app/uploads
+    environment:
+      - KAFKA_BOOTSTRAP_SERVER_IP=10.60.1.8:9092
+      - KAFKA_GROUP_ID=digival-folder
+    restart: always
+  folder_listner:
+    build:
+      context: ./folder_listner
+      dockerfile: Dockerfile
+    image: folder_listner
+    tty: true
+    environment:
+      - API_URL=http://backend_node:5006/answerpapers/create
+    volumes:
+      - ./uploads:/app/uploads
+      - ./uploads/db:/app/db
+    restart: always
+  frontends:
+    image: httpd:2.4
+    volumes:
+      - ${PWD}/frontends/Admin/dist/digival:/usr/local/apache2/htdocs
+      - ${PWD}/semester/dist/semister:/usr/local/apache2/htdocs/semister
+      - ${PWD}/frontends/faculty-app:/usr/local/apache2/htdocs/faculty
+      - ./uploads:/usr/local/apache2/htdocs/faculty/uploads:rw
+      - ${PWD}/uploads/annotated_pdfs:/usr/local/apache2/htdocs/annotated_pdfs
+    ports:
+      - 4901:80  
+    restart: always
+    tty: false
+  backend_node:
+    build:
+      context: ./backend_node
+      dockerfile: Dockerfile
+    image: backend_node
+    tty: true
+    env_file:
+      -  .env.prod
+    ports:
+     - 4902:5006 
+    volumes:
+      - ${PWD}/uploads/annotated_pdfs:/app/annotated_pdfs 
+    restart: always

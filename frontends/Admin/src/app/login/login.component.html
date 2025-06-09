@@ -1,0 +1,28 @@
+<main class="body"> 
+<div class="custom-con">
+   <div class="custom-wrapper">
+      <form [formGroup]="logdata" (ngSubmit)="onLogin()">
+         <div class="custom-logo">
+            <img src="assets/img/DIGIVAL_LOGO1.png" class="img-fluid">
+         </div>
+         <div class="custom-input-box">
+            <input type="text" placeholder="Username" class="form-control text-dark" formControlName="stdMobileNo" onkeypress="return event.charCode>47 && event.charCode<58" minlength="10" maxlength="10" required>
+            <i class='bx bxs-user'></i>
+         </div>
+         <div *ngIf="logdata.controls['stdMobileNo'].invalid && logdata.controls['stdMobileNo'].touched" class="text-danger">
+            Username is required and must be 10 digits.
+         </div>
+         <div class="custom-input-box">
+            <input type="password" placeholder="Password" class="form-control text-dark" formControlName="stdPwd" onkeypress="return event.charCode>47 && event.charCode<58" minlength="4" maxlength="6" required>
+            <i class='bx bxs-lock-alt'></i>
+         </div>
+         <div *ngIf="logdata.controls['stdPwd'].invalid && logdata.controls['stdPwd'].touched" class="text-danger">
+            Password is required and must be 6 characters long.
+         </div>
+         <h5 class="text-danger text-center mb-3" *ngIf="show_log_error!= ''"> {{show_log_error}} </h5>
+         <button type="submit" class="custom-btn" [disabled]="!logdata.valid">Login</button>
+      </form>
+   </div>
+</div>
+
+</main>

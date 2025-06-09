@@ -1,0 +1,74 @@
+<main id="main" class="main">
+  <section class="section dashboard">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="">
+
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Student Bar Code</h5>
+          </div>
+          <!-- Dropdown Box -->
+          <div class="card">
+            <div class="card-body">
+              <div class="row d-flex pt-3">
+                <div class="col-md-6">
+                  <select class="form-select" (change)="getCampusinfo()" [(ngModel)]="selected_campus_id">
+                    <option [ngValue]="null">Select Campus</option>
+                    <option *ngFor="let campus of campus_name" [value]="campus.campus_id">
+                      {{ campus.campus_name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+
+                  <select class="form-select" (change)="getBarcodeType()" [(ngModel)]="barcode_type">
+                    <option [ngValue]="null">Select Type</option>
+                    <option value="SUC">SUC</option>
+                    <option value="Hall Ticket">Hall Ticket</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mt-2" *ngIf="show_select == 1">
+
+                  <select class="form-select" [(ngModel)]="selected_section_id" (change)="get_section_info()">
+                    <option [ngValue]="null">Select Section</option>
+                    <option *ngFor="let section of campussectionlist" [value]="section.id">
+                      {{ section.section_name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-6 mt-2" *ngIf="show_select == 2" (change)="get_course_info()">
+                  <select class="form-select" [(ngModel)]="selected_course">
+                    <option [ngValue]="null">Select Course</option>
+                    <option *ngFor="let x of course_data" [value]="x.course_id">
+                      {{ x.course_name }}
+                    </option>
+                  </select>
+                </div>
+
+
+                <div class="col-md-12 text-center">
+                  <button class="btn btn-primary btn-sm mt-2" [disabled]="!(selected_section_id || selected_course)"
+                  (click)="onSubmit()">Submit</button>
+                </div>
+              </div>
+              <div *ngIf="showErrorMessage" class="mt-2 text-danger">
+                Please select a section.
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div *ngIf="show_barcode == 1">
+          <!-- <app-barcodehub [section_id]=selected_section_id [subject_info]="seclectionsubject"></app-barcodehub> -->
+          <app-barcodenew *ngIf="barcode_type == 'SUC'" [typeofbarcode]=barcode_type [section_id]=selected_section_id></app-barcodenew>
+          <app-barcodenew *ngIf="barcode_type != 'SUC'" [typeofbarcode]=barcode_type [campus_id]=selected_campus_id [course_id]=selected_course></app-barcodenew>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h5 class="card-title">Printer settings</h5>
+        <img src="assets/img/printer_settings2.png" class="img-fluid mt-2 m-2">
+      </div>
+    </div>
+  </section>
+</main>
